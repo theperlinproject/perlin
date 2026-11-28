@@ -17,6 +17,7 @@
 #include "client/systems/multiplayer/ItemCooldowns.hpp"
 #include "client/systems/multiplayer/RecipeUnlocks.hpp"
 #include "client/systems/multiplayer/GuiDataState.hpp"
+#include "client/ui/DduiState.hpp"
 
 using EC_KEY = struct ec_key_st;
 #include "client/systems/multiplayer/PackDownloader.hpp"
@@ -191,6 +192,11 @@ namespace perlin {
             std::string title, message;
         };
         bool TakeServerForm(ServerForm& out);
+        bool TakeDduiScreen(ui::DduiScreen& out);
+        bool ReadDduiScreen(const ui::DduiScreen& screen, json::Value& out, uint64_t& revision) const;
+        bool DduiScreenIsOpen(uint32_t id) const;
+        bool SendDduiUpdate(const ui::DduiScreen& screen, const std::string& path, const json::Value& value);
+        bool CloseDduiScreen(uint32_t id, const std::string& reason);
         bool TakeFormClosed() { return formClosed.exchange(false); }
         bool SendFormResponse(uint32_t id, const std::string* data, bool busy);
         bool SendServerSettingsRequest();
@@ -1080,6 +1086,9 @@ namespace perlin {
         std::atomic<int> controlsScheme{0};
         mutable std::mutex serverUiMutex;
         std::deque<ServerForm> pendingForms;
+        ui::DduiState dduiState;
+        std::deque<ui::DduiScreen> pendingDdui;
+        std::set<uint32_t> openDdui;
         std::atomic<bool> formClosed{false};
         std::vector<BossBar> bossBars;
         struct Objective {

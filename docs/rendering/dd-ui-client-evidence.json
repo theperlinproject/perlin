@@ -1,0 +1,713 @@
+{
+  "metadata": {
+    "sha256": "9138ed5c5a213c3de891f56693542c6de1f5258b04fac4889ac37233785a700e",
+    "file_versions": [
+      {
+        "file_version": "1.26.65.1",
+        "product_version": "1.26.65.1",
+        "fixed_file_info_offset": "0x133d2558"
+      }
+    ],
+    "codeview": [
+      {
+        "guid": "5f6cf44c-5d5d-f27c-4c4c-44205044422e",
+        "age": 1,
+        "pdb_path": "D:\\a\\_work\\1\\s\\build\\gamecore_x64_desktop\\Minecraft\\Minecraft.Windows\\Publish\\Minecraft.Windows.pdb",
+        "file_offset": "0xf89cb54"
+      }
+    ],
+    "image_base": "0x140000000"
+  },
+  "strings": {
+    "custom_form_data_{}": {
+      "rva": "0xf50eb0b",
+      "refs": [
+        {
+          "instruction_rva": "0xb680d0e",
+          "function_rva": "0xb6800c0",
+          "function_end_rva": "0xb68c0a1"
+        }
+      ]
+    },
+    "message_box_data_{}": {
+      "rva": "0xf50eaf7",
+      "refs": [
+        {
+          "instruction_rva": "0xb6c3c09",
+          "function_rva": "0xb6c2330",
+          "function_end_rva": "0xb6c57f4"
+        }
+      ]
+    },
+    "custom_form_focus_id_{}": {
+      "rva": "0xf50ead1",
+      "refs": [
+        {
+          "instruction_rva": "0x54b3bdd",
+          "function_rva": "0x54b3a80",
+          "function_end_rva": "0x54b3d49"
+        },
+        {
+          "instruction_rva": "0x54b4229",
+          "function_rva": "0x54b4170",
+          "function_end_rva": "0x54b4305"
+        }
+      ]
+    },
+    "minecraft:custom_form": {
+      "rva": "0xf59aa09",
+      "refs": []
+    },
+    "minecraft:message_box": {
+      "rva": "0xf520789",
+      "refs": []
+    },
+    "anchor_from": {
+      "rva": "0xf59b564",
+      "refs": [
+        {
+          "instruction_rva": "0x1c93d4c",
+          "function_rva": "0x1c938b0",
+          "function_end_rva": "0x1c94cfe"
+        }
+      ]
+    },
+    "anchor_to": {
+      "rva": "0xf57f671",
+      "refs": [
+        {
+          "instruction_rva": "0x1c93d76",
+          "function_rva": "0x1c938b0",
+          "function_end_rva": "0x1c94cfe"
+        }
+      ]
+    },
+    "grid_position": {
+      "rva": "0xf5892b8",
+      "refs": [
+        {
+          "instruction_rva": "0x1c8039d",
+          "function_rva": "0x1c7ea10",
+          "function_end_rva": "0x1c831fe"
+        }
+      ]
+    },
+    "inherit_max_sibling_width": {
+      "rva": "0xf5afbef",
+      "refs": [
+        {
+          "instruction_rva": "0x1c943b9",
+          "function_rva": "0x1c938b0",
+          "function_end_rva": "0x1c94cfe"
+        }
+      ]
+    },
+    "use_child_anchors": {
+      "rva": "0xf54afcd",
+      "refs": [
+        {
+          "instruction_rva": "0x1c74ea9",
+          "function_rva": "0x1c6c8e0",
+          "function_end_rva": "0x1c7ace6"
+        }
+      ]
+    },
+    "vanilla.ddui.objectArray": {
+      "rva": "0xf51ec4e",
+      "refs": [
+        {
+          "instruction_rva": "0x748d730",
+          "function_rva": null,
+          "function_end_rva": null
+        }
+      ]
+    },
+    "vanilla.ddui.number": {
+      "rva": "0xf5719ce",
+      "refs": [
+        {
+          "instruction_rva": "0x748ca10",
+          "function_rva": null,
+          "function_end_rva": null
+        }
+      ]
+    },
+    "vanilla.ddui.string": {
+      "rva": "0xf5b5361",
+      "refs": [
+        {
+          "instruction_rva": "0x748ce70",
+          "function_rva": null,
+          "function_end_rva": null
+        }
+      ]
+    },
+    "vanilla.ddui.bool": {
+      "rva": "0xf5a1cc2",
+      "refs": [
+        {
+          "instruction_rva": "0x748db90",
+          "function_rva": null,
+          "function_end_rva": null
+        }
+      ]
+    },
+    "ddui/root": {
+      "rva": "0xf530064",
+      "refs": [
+        {
+          "instruction_rva": "0x4aca93f",
+          "function_rva": "0x4aca850",
+          "function_end_rva": "0x4acb56b"
+        },
+        {
+          "instruction_rva": "0x4acac94",
+          "function_rva": "0x4aca850",
+          "function_end_rva": "0x4acb56b"
+        }
+      ]
+    },
+    "ddui/composition": {
+      "rva": "0xf5890c4",
+      "refs": [
+        {
+          "instruction_rva": "0x4aca96f",
+          "function_rva": "0x4aca850",
+          "function_end_rva": "0x4acb56b"
+        }
+      ]
+    },
+    "ddui/styling": {
+      "rva": "0xf5b73ef",
+      "refs": [
+        {
+          "instruction_rva": "0x4aca998",
+          "function_rva": "0x4aca850",
+          "function_end_rva": "0x4acb56b"
+        }
+      ]
+    }
+  },
+  "form_function_string_references": {
+    "form-disasm": [
+      {
+        "instruction_rva": "0xb680b79",
+        "value": "Close"
+      },
+      {
+        "instruction_rva": "0xb680d0e",
+        "value": "custom_form_data_{}"
+      },
+      {
+        "instruction_rva": "0xb680dbf",
+        "value": "length"
+      },
+      {
+        "instruction_rva": "0xb680dcb",
+        "value": "th"
+      },
+      {
+        "instruction_rva": "0xb680f88",
+        "value": "spacer_visible"
+      },
+      {
+        "instruction_rva": "0xb680ffd",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb68121e",
+        "value": "toggle_visible"
+      },
+      {
+        "instruction_rva": "0xb681264",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb681354",
+        "value": "toggled"
+      },
+      {
+        "instruction_rva": "0xb681487",
+        "value": "header_visible"
+      },
+      {
+        "instruction_rva": "0xb6814cd",
+        "value": "text"
+      },
+      {
+        "instruction_rva": "0xb681561",
+        "value": "label_visible"
+      },
+      {
+        "instruction_rva": "0xb6815a7",
+        "value": "text"
+      },
+      {
+        "instruction_rva": "0xb68163b",
+        "value": "slider_visible"
+      },
+      {
+        "instruction_rva": "0xb681681",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb681774",
+        "value": "value"
+      },
+      {
+        "instruction_rva": "0xb6818ac",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb681bc4",
+        "value": "textfield_visible"
+      },
+      {
+        "instruction_rva": "0xb681c9e",
+        "value": "th"
+      },
+      {
+        "instruction_rva": "0xb681cac",
+        "value": "length"
+      },
+      {
+        "instruction_rva": "0xb681ff3",
+        "value": "th"
+      },
+      {
+        "instruction_rva": "0xb682001",
+        "value": "length"
+      },
+      {
+        "instruction_rva": "0xb682140",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb682176",
+        "value": "value"
+      },
+      {
+        "instruction_rva": "0xb6823d7",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb6823e5",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb682654",
+        "value": "row_visible"
+      },
+      {
+        "instruction_rva": "0xb6826d3",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb682a43",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb682ad6",
+        "value": "dropdown_visible"
+      },
+      {
+        "instruction_rva": "0xb682b3f",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb682ebe",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb68323a",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb683619",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb683627",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb68373d",
+        "value": "minValue"
+      },
+      {
+        "instruction_rva": "0xb6837de",
+        "value": "maxValue"
+      },
+      {
+        "instruction_rva": "0xb68387f",
+        "value": "step"
+      },
+      {
+        "instruction_rva": "0xb683916",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb683f0f",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb683f1d",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb684143",
+        "value": "tooltip"
+      },
+      {
+        "instruction_rva": "0xb68414f",
+        "value": "ltip"
+      },
+      {
+        "instruction_rva": "0xb684442",
+        "value": "fixedFormatDigits"
+      },
+      {
+        "instruction_rva": "0xb68453b",
+        "value": "tooltip"
+      },
+      {
+        "instruction_rva": "0xb684547",
+        "value": "ltip"
+      },
+      {
+        "instruction_rva": "0xb6848b3",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb684978",
+        "value": "text"
+      },
+      {
+        "instruction_rva": "0xb684a19",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb684e62",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb684e70",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb68508f",
+        "value": "tooltip"
+      },
+      {
+        "instruction_rva": "0xb68509b",
+        "value": "ltip"
+      },
+      {
+        "instruction_rva": "0xb68530d",
+        "value": "image_width"
+      },
+      {
+        "instruction_rva": "0xb6853ac",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb6853dc",
+        "value": "image_visible"
+      },
+      {
+        "instruction_rva": "0xb685c1c",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb685d0b",
+        "value": "value"
+      },
+      {
+        "instruction_rva": "0xb685d51",
+        "value": "items"
+      },
+      {
+        "instruction_rva": "0xb6861d9",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb6861e7",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb686406",
+        "value": "tooltip"
+      },
+      {
+        "instruction_rva": "0xb686412",
+        "value": "ltip"
+      },
+      {
+        "instruction_rva": "0xb686873",
+        "value": "title"
+      },
+      {
+        "instruction_rva": "0xb6868fb",
+        "value": "closeButton"
+      },
+      {
+        "instruction_rva": "0xb686e9a",
+        "value": "minecraft"
+      },
+      {
+        "instruction_rva": "0xb686f4c",
+        "value": "title"
+      },
+      {
+        "instruction_rva": "0xb68715d",
+        "value": "layout[{}]"
+      },
+      {
+        "instruction_rva": "0xb6871e8",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb6871f4",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb6872ea",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb6875e0",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb6875ee",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb687890",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb68789c",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb687a27",
+        "value": "tooltip"
+      },
+      {
+        "instruction_rva": "0xb687a33",
+        "value": "ltip"
+      },
+      {
+        "instruction_rva": "0xb688301",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb68830d",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb6884f0",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb6884fc",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb688879",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb688885",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb688b22",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb688ca0",
+        "value": "value"
+      },
+      {
+        "instruction_rva": "0xb6892b2",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb6892c0",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb689562",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb68956e",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb689729",
+        "value": "fixedFormatDigits"
+      },
+      {
+        "instruction_rva": "0xb6898c3",
+        "value": "tooltip"
+      },
+      {
+        "instruction_rva": "0xb6898cf",
+        "value": "ltip"
+      },
+      {
+        "instruction_rva": "0xb689adc",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb689ae8",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb689d5f",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb68a040",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb68a04e",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb68a2f0",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb68a2fc",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb68a487",
+        "value": "tooltip"
+      },
+      {
+        "instruction_rva": "0xb68a493",
+        "value": "ltip"
+      },
+      {
+        "instruction_rva": "0xb68a6fb",
+        "value": "layout[{}]"
+      },
+      {
+        "instruction_rva": "0xb68a82d",
+        "value": "label"
+      },
+      {
+        "instruction_rva": "0xb68a9aa",
+        "value": "value"
+      },
+      {
+        "instruction_rva": "0xb68ab2b",
+        "value": "description"
+      },
+      {
+        "instruction_rva": "0xb68ab39",
+        "value": "tion"
+      },
+      {
+        "instruction_rva": "0xb68addb",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb68ade7",
+        "value": "ible"
+      },
+      {
+        "instruction_rva": "0xb68af72",
+        "value": "tooltip"
+      },
+      {
+        "instruction_rva": "0xb68af7e",
+        "value": "ltip"
+      },
+      {
+        "instruction_rva": "0xb68b186",
+        "value": "visible"
+      },
+      {
+        "instruction_rva": "0xb68b192",
+        "value": "ible"
+      }
+    ],
+    "message-disasm": [
+      {
+        "instruction_rva": "0xb6c3c09",
+        "value": "message_box_data_{}"
+      },
+      {
+        "instruction_rva": "0xb6c3c74",
+        "value": "title"
+      },
+      {
+        "instruction_rva": "0xb6c3cbf",
+        "value": "body"
+      },
+      {
+        "instruction_rva": "0xb6c3cff",
+        "value": "is_horizontal"
+      },
+      {
+        "instruction_rva": "0xb6c3d41",
+        "value": "is_vertical"
+      },
+      {
+        "instruction_rva": "0xb6c3d8f",
+        "value": "button1"
+      },
+      {
+        "instruction_rva": "0xb6c3dda",
+        "value": "button2"
+      },
+      {
+        "instruction_rva": "0xb6c3e1e",
+        "value": "button3"
+      },
+      {
+        "instruction_rva": "0xb6c4793",
+        "value": "minecraft"
+      },
+      {
+        "instruction_rva": "0xb6c4845",
+        "value": "title"
+      },
+      {
+        "instruction_rva": "0xb6c4bb5",
+        "value": "button1"
+      },
+      {
+        "instruction_rva": "0xb6c4bc1",
+        "value": "ton1"
+      },
+      {
+        "instruction_rva": "0xb6c4c18",
+        "value": "button2"
+      },
+      {
+        "instruction_rva": "0xb6c4c24",
+        "value": "ton2"
+      }
+    ]
+  },
+  "additional_immediate_string_evidence": [
+    {
+      "instruction_rva": "0xb686d1a",
+      "value": "modalForm",
+      "context": "custom-form function; immediate string assembled across instructions"
+    },
+    {
+      "instruction_rva": "0xb6c4507",
+      "value": "modalForm",
+      "context": "message-box function; immediate string assembled across instructions"
+    }
+  ]
+}

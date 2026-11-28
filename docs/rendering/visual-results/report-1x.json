@@ -1,0 +1,10 @@
+{
+  "expected": "expected-1x.png",
+  "actual": "actual-1x.png",
+  "width": 320,
+  "height": 180,
+  "total_pixels": 57600,
+  "different_pixels": 0,
+  "exact_match": true,
+  "max_channel_delta": 0
+}

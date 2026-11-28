@@ -1,0 +1,51 @@
+scene
+kind=1 x=0 y=0 w=320 h=180 z=-100 src=textures/ui/white tint=0.0784313753 0.0941176489 0.125490203
+kind=1 x=8 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.152941182 0.188235298 0.243137255
+kind=1 x=8 y=12 w=32 h=24 z=0 src=textures/ui/white clip=left 0.75 pixelperfect tint=0.254901975 0.709803939 0.960784316
+kind=1 x=47 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.152941182 0.188235298 0.243137255
+kind=1 x=47 y=12 w=32 h=24 z=0 src=textures/ui/white clip=right 0.75 pixelperfect tint=0.254901975 0.709803939 0.960784316
+kind=1 x=86 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.152941182 0.188235298 0.243137255
+kind=1 x=86 y=12 w=32 h=24 z=0 src=textures/ui/white clip=up 0.5 pixelperfect tint=0.254901975 0.709803939 0.960784316
+kind=1 x=125 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.152941182 0.188235298 0.243137255
+kind=1 x=125 y=12 w=32 h=24 z=0 src=textures/ui/white clip=down 0.5 pixelperfect tint=0.254901975 0.709803939 0.960784316
+kind=1 x=164 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.152941182 0.188235298 0.243137255
+kind=1 x=164 y=12 w=32 h=24 z=0 src=textures/ui/white clip=center 0.5 pixelperfect tint=0.254901975 0.709803939 0.960784316
+kind=1 x=203 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.152941182 0.188235298 0.243137255
+kind=1 x=203 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.254901975 0.709803939 0.960784316
+kind=1 x=242 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.152941182 0.188235298 0.243137255
+kind=1 x=242 y=12 w=32 h=24 z=0 src=textures/ui/white clip=left 0 pixelperfect tint=0.254901975 0.709803939 0.960784316
+kind=1 x=281 y=12 w=32 h=24 z=0 src=textures/ui/white tint=0.152941182 0.188235298 0.243137255
+kind=1 x=281 y=12 w=32 h=24 z=0 src=textures/ui/white clip=right 0.699999988 pixelperfect tint=0.254901975 0.709803939 0.960784316
+kind=1 x=8 y=54 w=66 h=38 z=0 src=textures/ui/frame
+kind=1 x=84 y=54 w=50 h=38 z=0 src=textures/ui/tile tiled=1 tilescale=2 3
+kind=1 x=146 y=54 w=36 h=36 z=0 src=textures/ui/strip keep=1
+kind=1 x=194 y=54 w=36 h=36 z=0 src=textures/ui/strip keep=cover
+kind=1 x=242 y=54 w=32 h=36 z=0 src=textures/ui/strip uv=4 0 4 4
+kind=1 x=286.500 y=54.500 w=21 h=36 z=0 src=textures/ui/white tint=0.964705884 0.615686297 0.211764708
+kind=0 cls=clip x=8 y=118 w=75 h=48 z=auto
+  kind=0 cls=clip x=2 y=2 w=71 h=44 z=auto
+    kind=0 cls=clip x=2 y=2 w=67 h=40 z=auto
+      kind=0 cls=clip x=2 y=2 w=63 h=36 z=auto
+        kind=0 cls=clip x=2 y=2 w=59 h=32 z=auto
+          kind=0 cls=clip x=2 y=2 w=55 h=28 z=auto
+            kind=0 cls=clip x=2 y=2 w=51 h=24 z=auto
+              kind=0 cls=clip x=2 y=2 w=47 h=20 z=auto
+                kind=0 cls=clip x=2 y=2 w=43 h=16 z=auto
+                  kind=1 x=-30 y=-30 w=110 h=110 z=0 src=textures/ui/white tint=0.250980407 0.823529422 0.482352942
+kind=0 cls=clip x=98 y=118 w=80 h=48 z=auto
+  kind=1 x=0 y=0 w=50 h=34 z=-2 src=textures/ui/white tint=0.87843138 0.333333343 0.678431392
+  kind=1 x=24 y=12 w=50 h=34 z=2 src=textures/ui/white tint=0.964705884 0.615686297 0.211764708
+kind=1 x=112 y=126 w=48 h=26 z=1 src=textures/ui/white tint=0.254901975 0.709803939 0.960784316
+kind=1 x=190 y=118 w=54 h=48 z=0 src=textures/ui/white tint=0.941176474 0.627451003 0.313725501 alpha=0.5
+kind=1 x=256 y=118 w=52 h=48 z=0 src=textures/ui/white clip=left 0.5 pixelperfect tint=0.254901975 0.709803939 0.960784316
+kind=3 cls=t x=8 y=1 w=310 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=CLIP: LEFT / RIGHT / UP / DOWN / CENTER / ZERO / FULL / TEXEL
+kind=3 cls=t x=8 y=42 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=NINE SLICE
+kind=3 cls=t x=84 y=42 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=XY TILE
+kind=3 cls=t x=146 y=42 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=CONTAIN
+kind=3 cls=t x=194 y=42 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=COVER
+kind=3 cls=t x=242 y=42 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=UV
+kind=3 cls=t x=286 y=42 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=SNAP
+kind=3 cls=t x=8 y=106 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=9 CLIPS
+kind=3 cls=t x=98 y=106 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=LAYERS
+kind=3 cls=t x=190 y=106 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=ALPHA
+kind=3 cls=t x=256 y=106 w=80 h=10 z=20 font=minecraft-size-6 size=6 line=6.750 align=left color=#dbe6f5ff text=BINDING

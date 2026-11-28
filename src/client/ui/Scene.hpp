@@ -37,6 +37,7 @@ namespace perlin::ui {
         float x = 0, y = 0, w = 0, h = 0;
         float knob = 0;
         std::string z = "auto";
+        bool inheritedClip = false;
 
         std::string src;
         std::string uv;
@@ -47,6 +48,7 @@ namespace perlin::ui {
         std::string tint;
         std::string alpha;
         std::string keep;
+        std::string baseSize;
         std::string glint;
         std::string key;
         std::string layer;
@@ -83,33 +85,24 @@ namespace perlin::ui {
     bool SceneHasText(const SceneDoc& doc, const std::string& needle);
     std::string DumpScene(const SceneDoc& doc);
 
-    constexpr int kSceneMaxDepth = 6;
-
     class SceneBuilder {
     public:
         static constexpr int kAutoZ = INT32_MIN;
 
         explicit SceneBuilder(std::vector<SceneNode>& root) {
             stack.push_back(&root);
-            flat.push_back(0);
         }
 
         SceneNode& Add(SceneNode node);
         SceneNode& Begin(SceneNode node);
         void End();
         int Depth() const {
-            int d = 0;
-            for (const char f : flat)
-                d += f ? 0 : 1;
-            return d - 1;
+            return static_cast<int>(stack.size()) - 1;
         }
         std::vector<SceneNode>& Current() { return *stack.back(); }
 
     private:
         std::vector<std::vector<SceneNode>*> stack;
-        std::vector<char> flat;
-        std::vector<std::pair<float, float>> shifts;
-        float shiftX = 0, shiftY = 0;
     };
 
     std::string SceneNumber(float v);

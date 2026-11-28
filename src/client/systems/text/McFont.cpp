@@ -8,8 +8,10 @@
 #include <cstring>
 #include <fstream>
 
+#ifndef PERLIN_UI_VISUAL_BITMAP_ONLY
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
+#endif
 
 #include <fstream>
 #include <iterator>
@@ -370,6 +372,7 @@ namespace perlin::ui {
         return true;
     }
 
+#ifndef PERLIN_UI_VISUAL_BITMAP_ONLY
     struct McFont::TtfFont {
         std::vector<unsigned char> data;
         stbtt_fontinfo info{};
@@ -454,6 +457,11 @@ namespace perlin::ui {
         }
         return false;
     }
+
+#else
+    bool McFont::AddTtf(const std::string&) { return false; }
+    bool McFont::RasterTtf(uint32_t, int, int, Glyph&) const { return false; }
+#endif
 
     void McFont::AddGlyphPage(uint32_t page, const std::vector<uint8_t>& rgba, int width, int height) {
         if (width < 16 || height < 16 ||

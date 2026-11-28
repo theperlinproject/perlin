@@ -52,6 +52,7 @@ namespace perlin::ui {
         std::function<float(const std::string& text, float scale, bool ten)> textWidth;
         std::function<float(float scale, bool ten)> lineHeight;
         std::function<bool(const std::string& texture, int& width, int& height)> textureSize;
+        std::function<bool(const std::string& texture, int& width, int& height)> textureBaseSize;
         std::function<std::string(const std::string& key)> localize;
     };
 

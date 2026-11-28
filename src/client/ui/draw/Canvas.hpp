@@ -1,5 +1,7 @@
 #pragma once
-#include "client/systems/gfx/RenderContext.hpp"
+#include "client/systems/gfx/UiPrimitives.hpp"
+#include "client/ui/UiTextureMeta.hpp"
+#include <cmath>
 #include "client/ui/draw/Color.hpp"
 #include "client/ui/draw/Text.hpp"
 
@@ -19,6 +21,7 @@ namespace perlin::ui::draw {
         virtual ~TextureSource() = default;
         virtual TexInfo Get(const std::string& key) = 0;
         virtual int Device() const = 0;
+        virtual TextureSidecar Sidecar(const std::string&) { return {}; }
     };
 
     struct Batch {
@@ -41,7 +44,9 @@ namespace perlin::ui::draw {
         bool nine = false;
         float slice[4] = {0, 0, 0, 0};
         int tiled = 0;
-        float tileScale = 1;
+        float tileScale = 1, tileScaleY = 1;
+        float baseW = 0, baseH = 0;
+        bool cover = false;
         std::string clip;
         Color tint;
         float alpha = 1;

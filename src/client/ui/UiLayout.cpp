@@ -55,12 +55,10 @@ namespace perlin::ui {
                 skip();
                 if (i >= s.size())
                     break;
-                if (s[i] == '-' && (dim.empty() || sign != 1 || true)) {
-                    if (dim.empty()) {
-                        sign = -1;
-                        i++;
-                        skip();
-                    }
+                if (s[i] == '-' && dim.empty()) {
+                    sign = -1;
+                    i++;
+                    skip();
                 } else if (s[i] == '+' && dim.empty()) {
                     i++;
                     skip();
@@ -444,15 +442,16 @@ namespace perlin::ui {
                         rescale == "horizontal" || rescale == "vertical") {
                         int maxItems = -1;
                         if (const json::Value* m = n->bag.Find("#maximum_grid_items"); m && m->IsNumber())
-                            maxItems = static_cast<int>(m->number);
+                            maxItems = static_cast<int>(std::clamp(m->NumberOr(0), -1.0, 16384.0));
                         else if (const json::Value* m = n->p.Find("maximum_grid_items"); m && m->IsNumber())
-                            maxItems = static_cast<int>(m->number);
+                            maxItems = static_cast<int>(std::clamp(m->NumberOr(0), -1.0, 16384.0));
                         if (collection.empty())
                             count = std::max(0, maxItems);
                         else
                             count = maxItems >= 0 ? std::min(maxItems, data.CollectionSize(collection))
                                                   : data.CollectionSize(collection);
                     }
+                    count = std::clamp(count, 0, 16384);
                     for (int i = 0; i < count; i++) {
                         std::vector<Collection> inner = collections;
                         if (!collection.empty())
@@ -522,15 +521,19 @@ namespace perlin::ui {
                 return n;
             }
 
-            void Measure(LNode& n, float pw, float ph, float fillW, float fillH, float sibW, float sibH) {
+            void Measure(LNode& n, float pw, float ph, float fillW, float fillH, float sibW, float sibH, bool viewport = false) {
                 n.dependsW = n.dependsH = false;
                 const bool isStack = n.type == "stack_panel";
                 const bool isGrid = n.type == "grid";
 
                 Dim wd, hd;
                 SizeSpecs(n, wd, hd);
-                n.dependsW = UsesParent(wd);
-                n.dependsH = UsesParent(hd);
+                if (viewport) {
+                    wd = {{Term::Px, pw, 1}};
+                    hd = {{Term::Px, ph, 1}};
+                }
+                n.dependsW = UsesParent(wd) || UsesKind(wd, Term::Default);
+                n.dependsH = UsesParent(hd) || UsesKind(hd, Term::Default);
 
                 float intrinsicW = kUnknown, intrinsicH = kUnknown;
                 Intrinsic(n, pw, wd, intrinsicW, intrinsicH);
@@ -541,26 +544,26 @@ namespace perlin::ui {
                     cw.parent = pw;
                     ch.parent = ph;
 
-                    cw.parentX = ch.parentX = pw;
-                    cw.parentY = ch.parentY = ph;
+                    cw.parentX = ch.parentX = w;
+                    cw.parentY = ch.parentY = h;
                     cw.fill = fillW;
                     ch.fill = fillH;
                     cw.sibling = sibW;
                     ch.sibling = sibH;
                     cw.intrinsic = intrinsicW;
                     ch.intrinsic = intrinsicH;
-                    if (!Known(w))
-                        EvalDim(wd, cw, w);
-                    if (!Known(h))
-                        EvalDim(hd, ch, h);
-                    if (!Known(w))
-                        EvalDim(wd, cw, w);
-                    if (!Known(h))
-                        EvalDim(hd, ch, h);
+                    cw.defaultValue = pw;
+                    ch.defaultValue = ph;
+                    for (int pass = 0; pass < 2; ++pass) {
+                        cw.parentX = w; cw.parentY = h;
+                        if (!Known(w)) EvalDim(wd, cw, w);
+                        ch.parentX = w; ch.parentY = h;
+                        if (!Known(h)) EvalDim(hd, ch, h);
+                    }
                 };
                 resolve();
 
-                ClampSize(n, pw, ph, w, h);
+                if (!viewport) ClampSize(n, pw, ph, w, h);
                 const bool wKnown0 = Known(w), hKnown0 = Known(h);
                 const float w0 = w, h0 = h;
 
@@ -618,38 +621,32 @@ namespace perlin::ui {
                     DimContext cw, ch;
                     cw.parent = pw;
                     ch.parent = ph;
-                    cw.parentX = ch.parentX = pw;
-                    cw.parentY = ch.parentY = ph;
+                    cw.parentX = ch.parentX = w;
+                    cw.parentY = ch.parentY = h;
                     cw.fill = fillW;
                     ch.fill = fillH;
                     cw.sibling = sibW;
                     ch.sibling = sibH;
                     cw.intrinsic = intrinsicW;
                     ch.intrinsic = intrinsicH;
+                    cw.defaultValue = pw;
+                    ch.defaultValue = ph;
                     cw.childrenMax = maxW;
                     ch.childrenMax = maxH;
 
                     cw.children = sumW;
                     ch.children = sumH;
-                    if (!Known(w) || needsChildrenW) {
-                        float t = kUnknown;
-                        if (EvalDim(wd, cw, t))
-                            w = t;
-                    }
-                    if (!Known(h) || needsChildrenH) {
-                        float t = kUnknown;
-                        if (EvalDim(hd, ch, t))
-                            h = t;
-                    }
-                    if (!Known(w)) {
-                        float t = kUnknown;
-                        if (EvalDim(wd, cw, t))
-                            w = t;
-                    }
-                    if (!Known(h)) {
-                        float t = kUnknown;
-                        if (EvalDim(hd, ch, t))
-                            h = t;
+                    for (int pass = 0; pass < 2; ++pass) {
+                        cw.parentX = w; cw.parentY = h;
+                        if (!Known(w) || needsChildrenW) {
+                            float t = kUnknown;
+                            if (EvalDim(wd, cw, t)) w = t;
+                        }
+                        ch.parentX = w; ch.parentY = h;
+                        if (!Known(h) || needsChildrenH) {
+                            float t = kUnknown;
+                            if (EvalDim(hd, ch, t)) h = t;
+                        }
                     }
                 }
                 if (!Known(w))
@@ -660,9 +657,9 @@ namespace perlin::ui {
                     w = std::max(w, sibW);
                 if (inheritH && Known(sibH))
                     h = std::max(h, sibH);
-                ClampSize(n, pw, ph, w, h);
-                n.w = w;
-                n.h = h;
+                if (!viewport) ClampSize(n, pw, ph, w, h);
+                n.w = std::isfinite(w) ? std::max(0.0f, w) : 0.0f;
+                n.h = std::isfinite(h) ? std::max(0.0f, h) : 0.0f;
 
                 {
                     bool redo = false;
@@ -691,6 +688,7 @@ namespace perlin::ui {
                     float cursor = 0;
                     for (LNode* k : live) {
                         float ox = 0, oy = 0;
+                        Offset(*k, n.w, n.h, ox, oy);
                         if (vertical) {
                             float cx = 0, cy = 0;
                             if (childAnchors)
@@ -1150,9 +1148,13 @@ namespace perlin::ui {
 
             void GridDimensions(const LNode& n, int& cols, int& rows) const {
                 cols = rows = 1;
+                const auto dimension = [](const json::Value& v) {
+                    const double n = v.NumberOr(1);
+                    return std::isfinite(n) ? static_cast<int>(std::clamp(n, 1.0, 16384.0)) : 1;
+                };
                 if (const json::Value* d = n.Get("grid_dimensions"); d && d->IsArray() && d->array.size() >= 2) {
-                    cols = static_cast<int>(d->array[0].NumberOr(1));
-                    rows = static_cast<int>(d->array[1].NumberOr(1));
+                    cols = dimension(d->array[0]);
+                    rows = dimension(d->array[1]);
                 }
                 if (const json::Value* b = n.Get("grid_dimension_binding"); b) {
                     json::Value v;
@@ -1161,8 +1163,8 @@ namespace perlin::ui {
                     else if (b->IsString())
                         data.Global(b->string, v);
                     if (v.IsArray() && v.array.size() >= 2) {
-                        cols = static_cast<int>(v.array[0].NumberOr(1));
-                        rows = static_cast<int>(v.array[1].NumberOr(1));
+                        cols = dimension(v.array[0]);
+                        rows = dimension(v.array[1]);
                     }
                 }
                 if (cols < 1)
@@ -1252,13 +1254,15 @@ namespace perlin::ui {
                 if (n.type == "image") {
                     int tw = 0, th = 0;
                     const std::string tex = n.Str("texture");
-                    if (!tex.empty() && services.textureSize && services.textureSize(tex, tw, th)) {
+                    if (!tex.empty() && ((services.textureBaseSize && services.textureBaseSize(tex, tw, th)) ||
+                                         (services.textureSize && services.textureSize(tex, tw, th)))) {
                         iw = static_cast<float>(tw);
                         ih = static_cast<float>(th);
-                        if (const json::Value* uv = n.Get("uv_size"); uv && uv->IsArray() && uv->array.size() >= 2) {
-                            iw = static_cast<float>(uv->array[0].NumberOr(iw));
-                            ih = static_cast<float>(uv->array[1].NumberOr(ih));
-                        }
+                    }
+                    if (const auto* base = n.Get("base_size"); base && base->IsArray() && base->array.size() == 2) {
+                        const float bw = static_cast<float>(base->array[0].NumberOr(0));
+                        const float bh = static_cast<float>(base->array[1].NumberOr(0));
+                        if (bw > 0 && bh > 0 && std::isfinite(bw) && std::isfinite(bh)) { iw = bw; ih = bh; }
                     }
                 }
             }
@@ -1322,15 +1326,16 @@ namespace perlin::ui {
                             continue;
                         DimContext c;
                         c.parent = axis == 0 ? pw : ph;
-                        c.parentX = pw;
-                        c.parentY = ph;
+                        c.parentX = w;
+                        c.parentY = h;
                         c.children = c.childrenMax = c.sibling = kUnknown;
                         float value = 0;
                         if (!EvalDim(d, c, value))
                             continue;
 
-                        if (isMax && value <= 0.0f)
+                        if (!std::isfinite(value))
                             continue;
+                        value = std::max(0.0f, value);
                         float& target = axis == 0 ? w : h;
                         target = isMax ? std::min(target, value) : std::max(target, value);
                     }
@@ -1363,6 +1368,7 @@ namespace perlin::ui {
                         const float each = Known(total)
                                                ? std::max(0.0f, total - used) / static_cast<float>(fillCount)
                                                : 0.0f;
+                        if (vertical) fillH = each; else fillW = each;
                         for (LNode* k : fillKids)
                             Measure(*k, w, h, vertical ? kUnknown : each, vertical ? each : kUnknown,
                                     kUnknown, kUnknown);
@@ -1386,7 +1392,7 @@ namespace perlin::ui {
                     }
                     for (LNode* k : live)
                         if (k->needSibW || k->needSibH)
-                            Measure(*k, w, h, kUnknown, kUnknown, k->needSibW ? maxW : kUnknown,
+                            Measure(*k, w, h, fillW, fillH, k->needSibW ? maxW : kUnknown,
                                     k->needSibH ? maxH : kUnknown);
                 }
             }
@@ -1415,61 +1421,82 @@ namespace perlin::ui {
                 const int items = static_cast<int>(live.size());
                 if (rescale == "horizontal") {
                     if (itemW > 0 && Known(width) && width > 0)
-                        cols = std::max(1, static_cast<int>(std::floor((width + 0.01f) / itemW)));
+                        cols = std::max(1, static_cast<int>(std::clamp(std::floor((width + 0.01f) / itemW), 1.0f, 16384.0f)));
                     rows = (items + cols - 1) / cols;
                 } else {
                     if (itemH > 0 && Known(height) && height > 0)
-                        rows = std::max(1, static_cast<int>(std::floor((height + 0.01f) / itemH)));
+                        rows = std::max(1, static_cast<int>(std::clamp(std::floor((height + 0.01f) / itemH), 1.0f, 16384.0f)));
                     cols = (items + rows - 1) / rows;
                 }
                 cols = std::max(cols, 1);
                 rows = std::max(rows, 1);
             }
 
-            void GridExtent(LNode& n, std::vector<LNode*>& live, float availW, float availH, float& w,
-                            float& h) const {
+            static bool GridCell(const LNode& grid, const LNode& child, size_t index,
+                                 int cols, int rows, size_t& col, size_t& row) {
+                if (const auto* p = child.Get("grid_position"); p && p->IsArray() && p->array.size() >= 2) {
+                    const double r = p->array[0].NumberOr(-1), c = p->array[1].NumberOr(-1);
+                    if (r < 0 || c < 0 || r >= rows || c >= cols || !std::isfinite(r) || !std::isfinite(c))
+                        return false;
+                    row = static_cast<size_t>(r); col = static_cast<size_t>(c);
+                } else if (grid.Str("grid_fill_direction") == "vertical") {
+                    row = index % static_cast<size_t>(rows); col = index / static_cast<size_t>(rows);
+                } else {
+                    col = index % static_cast<size_t>(cols); row = index / static_cast<size_t>(cols);
+                }
+                return col < static_cast<size_t>(cols) && row < static_cast<size_t>(rows);
+            }
+
+            void GridMetrics(LNode& n, const std::vector<LNode*>& live, float availW, float availH,
+                             std::vector<float>& colWidth, std::vector<float>& rowHeight) const {
                 int cols = 1, rows = 1;
                 GridShape(n, live, availW, availH, cols, rows);
-                std::vector<float> colWidth(static_cast<size_t>(cols), 0.0f),
-                    rowHeight(static_cast<size_t>(rows), 0.0f);
-                for (size_t i = 0; i < live.size(); i++) {
-                    const size_t c = i % static_cast<size_t>(cols), r = i / static_cast<size_t>(cols);
-                    if (r >= rowHeight.size())
-                        break;
+                colWidth.assign(static_cast<size_t>(cols), 0);
+                rowHeight.assign(static_cast<size_t>(rows), 0);
+                float cellW = 0, cellH = 0;
+                bool hasPositioned = false;
+                for (size_t i = 0; i < live.size(); ++i) {
+                    size_t c, r;
+                    if (!GridCell(n, *live[i], i, cols, rows, c, r)) continue;
+                    cellW = std::max(cellW, live[i]->w); cellH = std::max(cellH, live[i]->h);
                     colWidth[c] = std::max(colWidth[c], live[i]->w);
                     rowHeight[r] = std::max(rowHeight[r], live[i]->h);
+                    hasPositioned |= live[i]->Get("grid_position") != nullptr;
                 }
-                w = 0;
-                h = 0;
-                for (float v : colWidth)
-                    w += v;
-                for (float v : rowHeight)
-                    h += v;
+                // Preserve empty cells before explicitly positioned controls in a sparse grid.
+                if (hasPositioned) {
+                    for (float& w : colWidth) if (w == 0) w = cellW;
+                    for (float& h : rowHeight) if (h == 0) h = cellH;
+                }
+            }
+
+            void GridExtent(LNode& n, std::vector<LNode*>& live, float availW, float availH, float& w,
+                            float& h) const {
+                std::vector<float> colWidth, rowHeight;
+                GridMetrics(n, live, availW, availH, colWidth, rowHeight);
+                w = h = 0;
+                for (float v : colWidth) w += v;
+                for (float v : rowHeight) h += v;
             }
 
             void PlaceGrid(LNode& n, std::vector<LNode*>& live, float ax, float ay) {
-                int cols = 1, rows = 1;
-                GridShape(n, live, n.w, n.h, cols, rows);
-                std::vector<float> colWidth(static_cast<size_t>(cols), 0.0f),
-                    rowHeight(static_cast<size_t>(rows), 0.0f);
-                for (size_t i = 0; i < live.size(); i++) {
-                    const size_t c = i % static_cast<size_t>(cols), r = i / static_cast<size_t>(cols);
-                    if (r >= rowHeight.size())
-                        break;
-                    colWidth[c] = std::max(colWidth[c], live[i]->w);
-                    rowHeight[r] = std::max(rowHeight[r], live[i]->h);
-                }
-                for (size_t i = 0; i < live.size(); i++) {
-                    const size_t c = i % static_cast<size_t>(cols), r = i / static_cast<size_t>(cols);
-                    float x = 0, y = 0;
-                    for (size_t k = 0; k < c; k++)
-                        x += colWidth[k];
-                    for (size_t k = 0; k < r && k < rowHeight.size(); k++)
-                        y += rowHeight[k];
+                std::vector<float> colWidth, rowHeight;
+                GridMetrics(n, live, n.w, n.h, colWidth, rowHeight);
+                // Prefix sums make large grids linear in the number of controls.
+                std::vector<float> x(colWidth.size() + 1, 0), y(rowHeight.size() + 1, 0);
+                for (size_t c = 0; c < colWidth.size(); ++c) x[c + 1] = x[c] + colWidth[c];
+                for (size_t r = 0; r < rowHeight.size(); ++r) y[r + 1] = y[r] + rowHeight[r];
+                for (size_t i = 0; i < live.size(); ++i) {
+                    size_t c, r;
+                    if (!GridCell(n, *live[i], i, static_cast<int>(colWidth.size()), static_cast<int>(rowHeight.size()), c, r)) {
+                        live[i]->visible = false; continue;
+                    }
                     float ox = 0, oy = 0;
                     Offset(*live[i], n.w, n.h, ox, oy);
-                    live[i]->x = x + ox;
-                    live[i]->y = y + oy;
+                    float cx = 0, cy = 0;
+                    if (n.Bool("use_child_anchors", false)) AnchorPosition(*live[i], colWidth[c], rowHeight[r], cx, cy);
+                    live[i]->x = x[c] + cx + ox;
+                    live[i]->y = y[r] + cy + oy;
                     Place(*live[i], ax + live[i]->x, ay + live[i]->y);
                 }
             }
@@ -1521,6 +1548,8 @@ namespace perlin::ui {
                         const Dim d = ParseDim(o->array[static_cast<size_t>(axis)]);
                         DimContext c;
                         c.parent = axis == 0 ? pw : ph;
+                        c.parentX = k.w;
+                        c.parentY = k.h;
                         float v = 0;
                         if (EvalDim(d, c, v))
                             (axis == 0 ? x : y) = v;
@@ -1560,7 +1589,7 @@ namespace perlin::ui {
                          : std::next(it);
         if (!tree)
             return nullptr;
-        evaluator.Measure(*tree, guiW, guiH, kUnknown, kUnknown, kUnknown, kUnknown);
+        evaluator.Measure(*tree, guiW, guiH, kUnknown, kUnknown, kUnknown, kUnknown, true);
         tree->w = guiW;
         tree->h = guiH;
         evaluator.Place(*tree, 0, 0);

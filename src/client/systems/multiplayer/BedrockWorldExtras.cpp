@@ -1256,8 +1256,6 @@ namespace perlin {
                    SetMovementAuthorityPacket,
                    GraphicsOverrideParameterPacket, PrimitiveShapesPacket, ServerScriptDebugDrawerPacket,
                    ClientboundAttributeLayerSyncPacket, CameraAimAssistPacket,
-                   CameraAimAssistPresetsPacket, CameraAimAssistActorPriorityPacket,
-                   ClientboundDataStorePacket, ClientboundDataDrivenUiShowScreenPacket,
-                   ClientboundDataDrivenUiCloseScreenPacket, ClientboundDataDrivenUiReloadPacket>();
+                   CameraAimAssistPresetsPacket, CameraAimAssistActorPriorityPacket>();
     }
 }

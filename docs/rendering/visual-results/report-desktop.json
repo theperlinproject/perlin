@@ -1,0 +1,10 @@
+{
+  "expected": "diagnostic.png",
+  "actual": "xvfb-desktop.png",
+  "width": 960,
+  "height": 540,
+  "total_pixels": 518400,
+  "different_pixels": 0,
+  "exact_match": true,
+  "max_channel_delta": 0
+}

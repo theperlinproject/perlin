@@ -8,6 +8,76 @@
 namespace perlin {
     using namespace proto;
 
+    namespace {
+        json::Value StoreValue(const DataStorePropertyValue& v, unsigned depth = 0) {
+            if (depth >= 64) return {};
+            if (auto x = std::get_if<bool>(&v.value)) return json::Value(*x);
+            if (auto x = std::get_if<int64_t>(&v.value)) return json::Value(static_cast<double>(*x));
+            if (auto x = std::get_if<std::string>(&v.value)) return json::Value(*x);
+            if (auto x = std::get_if<std::vector<DataStoreMapEntry>>(&v.value)) {
+                auto result = json::Value::MakeObject();
+                for (const auto& e : *x) result.Set(e.key, StoreValue(e.value, depth + 1));
+                return result;
+            }
+            return {};
+        }
+    }
+
+    bool BedrockSession::TakeDduiScreen(ui::DduiScreen& out) {
+        std::lock_guard lock(serverUiMutex);
+        if (pendingDdui.empty()) return false;
+        out = std::move(pendingDdui.front());
+        pendingDdui.pop_front();
+        return true;
+    }
+    bool BedrockSession::ReadDduiScreen(const ui::DduiScreen& screen, json::Value& out, uint64_t& revision) const {
+        std::lock_guard lock(serverUiMutex);
+        const auto* value = dduiState.Read(screen.StoreName(), "modalForm");
+        if (!value || !value->IsObject() || !openDdui.contains(screen.formId)) return false;
+        if (revision != dduiState.Revision()) out = *value;
+        revision = dduiState.Revision();
+        return true;
+    }
+    bool BedrockSession::DduiScreenIsOpen(uint32_t id) const {
+        std::lock_guard lock(serverUiMutex);
+        return openDdui.contains(id);
+    }
+    bool BedrockSession::SendDduiUpdate(const ui::DduiScreen& screen, const std::string& path, const json::Value& value) {
+        ServerboundDataStorePacket p;
+        p.name = screen.StoreName(); p.property = "modalForm"; p.path = path;
+        if (value.IsBool()) { p.dataType = ServerboundDataStorePacketDataType::Bool; p.data = value.boolean; }
+        else if (value.IsNumber() && std::isfinite(value.number)) { p.dataType = ServerboundDataStorePacketDataType::Double; p.data = value.number; }
+        else if (value.IsString()) { p.dataType = ServerboundDataStorePacketDataType::String; p.data = value.string; }
+        else return false;
+        {
+            std::lock_guard lock(serverUiMutex);
+            if (!openDdui.contains(screen.formId)) return false;
+            const auto v = dduiState.Next(p.name, p.property, p.path);
+            if (!v) return false;
+            const auto* root = dduiState.Read(p.name, p.property);
+            const auto* previous = root ? ui::DduiState::At(*root, path) : nullptr;
+            if (!previous || previous->type != value.type) return false;
+            p.updateCount = v->property; p.pathUpdateCount = v->path;
+        }
+        if (!Send(p)) return false;
+        // Do not hold the state lock during transport callbacks. A newer server
+        // revision received in the meantime wins over the optimistic write.
+        std::lock_guard lock(serverUiMutex);
+        if (!openDdui.contains(screen.formId)) return false;
+        dduiState.Update(p.name, p.property, p.path, {p.updateCount, p.pathUpdateCount}, value);
+        return true;
+    }
+    bool BedrockSession::CloseDduiScreen(uint32_t id, const std::string& reason) {
+        {
+            std::lock_guard lock(serverUiMutex);
+            if (!openDdui.erase(id)) return false;
+            std::erase_if(pendingDdui, [&](const auto& s) { return s.formId == id; });
+        }
+        ServerboundDataDrivenScreenClosedPacket p;
+        p.formId = id; p.closeReason = reason;
+        return Send(p);
+    }
+
     bool BedrockSession::TakeServerForm(ServerForm& out) {
         std::lock_guard<std::mutex> lk(serverUiMutex);
         if (pendingForms.empty())
@@ -97,6 +167,9 @@ namespace perlin {
     void BedrockSession::ResetServerGui() {
         std::lock_guard lock(serverUiMutex);
         guiData.Clear();
+        pendingDdui.clear();
+        openDdui.clear();
+        dduiState.Clear();
         inventoryUiOptions = {};
         furnaceUiOptions = {};
     }
@@ -143,6 +216,58 @@ namespace perlin {
     }
 
     void BedrockSession::RegisterServerUiHandlers() {
+        On<ClientboundDataStorePacket>([this](const ClientboundDataStorePacket& p) {
+            std::lock_guard lock(serverUiMutex);
+            for (const auto& e : p.updates) {
+                switch (e.changeType) {
+                case DataStoreChangeEntryChangeType::Change:
+                    dduiState.Change(e.name, e.property, e.updateCount, StoreValue(e.newValue));
+                    break;
+                case DataStoreChangeEntryChangeType::Removal:
+                    dduiState.Remove(e.name, e.property);
+                    break;
+                case DataStoreChangeEntryChangeType::Update: {
+                    json::Value v;
+                    if (auto x = std::get_if<double>(&e.data)) v = json::Value(*x);
+                    else if (auto x = std::get_if<bool>(&e.data)) v = json::Value(*x);
+                    else if (auto x = std::get_if<std::string>(&e.data)) v = json::Value(*x);
+                    else break;
+                    dduiState.Update(e.name, e.property, e.path, {e.updateCount, e.pathUpdateCount}, std::move(v));
+                    break;
+                }
+                }
+            }
+        });
+        On<ClientboundDataDrivenUiShowScreenPacket>([this](const ClientboundDataDrivenUiShowScreenPacket& p) {
+            bool busy = false;
+            {
+                std::lock_guard lock(serverUiMutex);
+                if (openDdui.contains(p.formId)) return;
+                busy = openDdui.size() >= 16;
+                if (!busy) {
+                    openDdui.insert(p.formId);
+                    pendingDdui.push_back({p.screenId, p.formId, p.dataInstanceId});
+                }
+            }
+            if (busy) {
+                ServerboundDataDrivenScreenClosedPacket reply;
+                reply.formId = p.formId; reply.closeReason = "UserBusy"; Send(reply);
+            }
+        });
+        On<ClientboundDataDrivenUiCloseScreenPacket>([this](const ClientboundDataDrivenUiCloseScreenPacket& p) {
+            if (p.formId) { CloseDduiScreen(*p.formId, "ProgrammaticClose"); return; }
+            {
+                std::lock_guard lock(serverUiMutex);
+                openDdui.clear(); pendingDdui.clear();
+            }
+            ServerboundDataDrivenScreenClosedPacket reply;
+            reply.closeReason = "ProgrammaticCloseAll"; Send(reply);
+        });
+        On<ClientboundDataDrivenUiReloadPacket>([this](const ClientboundDataDrivenUiReloadPacket&) {
+            // Invalidate visible snapshots. Ore UI resource reloading requires its own renderer.
+            std::lock_guard lock(serverUiMutex);
+            pendingDdui.clear(); openDdui.clear(); dduiState.Clear();
+        });
         On<PlayerLocationPacket>([this](const PlayerLocationPacket& p) {
             std::optional<glm::vec3> position;
             if (p.type == PlayerLocationPacketType::Coordinates) {

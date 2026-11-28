@@ -1,0 +1,42 @@
+-- The C compiler identification is GNU 14.2.0
+-- The CXX compiler identification is GNU 14.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+[1/9] Creating directories for 'perlin_api-populate'
+[1/9] Performing download step (git clone) for 'perlin_api-populate'
+Cloning into 'perlin_api-src'...
+fatal: unable to access 'https://github.com/theperlinproject/perlin-api.git/': Could not resolve host: github.com
+Cloning into 'perlin_api-src'...
+fatal: unable to access 'https://github.com/theperlinproject/perlin-api.git/': Could not resolve host: github.com
+Cloning into 'perlin_api-src'...
+fatal: unable to access 'https://github.com/theperlinproject/perlin-api.git/': Could not resolve host: github.com
+Had to git clone more than once: 3 times.
+CMake Error at perlin_api-subbuild/perlin_api-populate-prefix/tmp/perlin_api-populate-gitclone.cmake:50 (message):
+  Failed to clone repository:
+  'https://github.com/theperlinproject/perlin-api.git'
+
+
+FAILED: perlin_api-populate-prefix/src/perlin_api-populate-stamp/perlin_api-populate-download /mnt/data/work/parity-build/_deps/perlin_api-subbuild/perlin_api-populate-prefix/src/perlin_api-populate-stamp/perlin_api-populate-download 
+cd /mnt/data/work/parity-build/_deps && /usr/bin/cmake -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P /mnt/data/work/parity-build/_deps/perlin_api-subbuild/perlin_api-populate-prefix/tmp/perlin_api-populate-gitclone.cmake && /usr/bin/cmake -E touch /mnt/data/work/parity-build/_deps/perlin_api-subbuild/perlin_api-populate-prefix/src/perlin_api-populate-stamp/perlin_api-populate-download
+ninja: build stopped: subcommand failed.
+
+CMake Error at /usr/share/cmake-3.31/Modules/FetchContent.cmake:1918 (message):
+  Build step for perlin_api failed: 1
+Call Stack (most recent call first):
+  /usr/share/cmake-3.31/Modules/FetchContent.cmake:1609 (__FetchContent_populateSubbuild)
+  /usr/share/cmake-3.31/Modules/FetchContent.cmake:2145:EVAL:2 (__FetchContent_doPopulation)
+  /usr/share/cmake-3.31/Modules/FetchContent.cmake:2145 (cmake_language)
+  /usr/share/cmake-3.31/Modules/FetchContent.cmake:2384 (__FetchContent_Populate)
+  cmake/PerlinApiPackage.cmake:16 (FetchContent_MakeAvailable)
+  CMakeLists.txt:23 (include)
+
+
+-- Configuring incomplete, errors occurred!

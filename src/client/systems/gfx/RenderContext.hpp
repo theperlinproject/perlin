@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include "client/systems/gfx/UiPrimitives.hpp"
 #include "client/systems/gfx/RenderStates.hpp"
 #include "client/systems/gfx/RenderSurface.hpp"
 #include "client/systems/gfx/Frustum.hpp"
@@ -57,18 +58,6 @@ namespace perlin {
         std::string api, adapter;
         uint64_t window = 0, display = 0, device = 0;
     };
-
-    struct UiVertex {
-        float x, y, z;
-        uint32_t abgr;
-        float u, v;
-    };
-    static_assert(sizeof(UiVertex) == 24);
-
-    // HudDoll: the HUD paper doll, composited right after the HUD (Gui) as part of it. Debug: the F3 debug
-    // screen, drawn over the HUD and its paper doll. Doll (the inventory player preview) stays above the GUI
-    // it belongs to.
-    enum class UiLayer : uint8_t { World, WorldLate, Hand, Gui, Doll, Top, Export, HudDoll, Debug };
 
     enum class DrawMaterial : uint8_t { Auto, Entity, Particle, Weather, Cracks, Nametag };
 

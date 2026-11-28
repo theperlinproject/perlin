@@ -15,6 +15,7 @@
 
 #include "client/systems/input/InputManager.hpp"
 #include "client/ui/JsonUi.hpp"
+#include "client/ui/DduiState.hpp"
 #include "client/ui/Scene.hpp"
 #include "client/ui/SceneEmit.hpp"
 #include "client/ui/UiLayout.hpp"
@@ -26,9 +27,10 @@ namespace perlin::ui {
     };
 
     struct FormElement {
-        enum class Kind { Label, Header, Divider, Input, Toggle, Slider, StepSlider, Dropdown };
+        enum class Kind { Label, Header, Divider, Input, Toggle, Slider, StepSlider, Dropdown, Button, Spacer };
         Kind kind = Kind::Label;
-        std::string text, placeholder, value;
+        std::string text, placeholder, value, wirePath;
+        bool visible = true, disabled = false;
         bool flag = false;
         double number = 0, min = 0, max = 1, step = 1;
         int index = 0;
@@ -43,6 +45,7 @@ namespace perlin::ui {
         std::string title, content, button1, button2, submit;
         std::vector<FormButton> buttons;
         std::vector<FormElement> elements;
+        bool ddui = false, showClose = true;
         int focus = -1;
         int openDropdown = -1;
     };
@@ -110,6 +113,8 @@ namespace perlin::screen {
         int dragSlider = -1;
         std::chrono::steady_clock::time_point lastWarm, lastAnim;
         bool previewOpened = false;
+        std::optional<ui::DduiScreen> ddui;
+        uint64_t dduiRevision = UINT64_MAX;
 
     private:
         void UpdateForm(ui::Hud& hud, BedrockSession* live, int fbW, int fbH);

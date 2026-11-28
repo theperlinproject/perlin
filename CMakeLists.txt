@@ -955,6 +955,15 @@ if(PERLIN_BUILD_TESTS AND NOT EMSCRIPTEN AND NOT ANDROID AND NOT PERLIN_IOS)
     target_include_directories(ui_library_selftest PRIVATE src)
     target_compile_features(ui_library_selftest PRIVATE cxx_std_23)
     add_test(NAME ui_library_selftest COMMAND ui_library_selftest)
+    add_executable(ui_layout_selftest tests/ui_layout_selftest.cpp src/client/ui/UiLayout.cpp
+        src/client/ui/UiExpr.cpp src/util/JsonValue.cpp)
+    target_include_directories(ui_layout_selftest PRIVATE src)
+    target_compile_features(ui_layout_selftest PRIVATE cxx_std_23)
+    add_test(NAME ui_layout_selftest COMMAND ui_layout_selftest)
+    add_executable(ddui_state_selftest tests/ddui_state_selftest.cpp src/client/ui/DduiState.cpp src/util/JsonValue.cpp)
+    target_include_directories(ddui_state_selftest PRIVATE src)
+    target_compile_features(ddui_state_selftest PRIVATE cxx_std_23)
+    add_test(NAME ddui_state_selftest COMMAND ddui_state_selftest)
     add_executable(ui_conformance tests/ui_conformance.cpp src/util/JsonValue.cpp src/client/ui/UiExpr.cpp src/client/ui/JsonUi.cpp
         src/client/ui/UiLayout.cpp src/client/systems/text/McFont.cpp src/client/systems/text/FontProviderTables.cpp src/client/ui/TenFont.cpp src/client/ui/SceneEmit.cpp src/client/ui/SceneKit.cpp src/client/ui/Scene.cpp
         src/client/ui/HudData.cpp src/client/systems/text/FormatCodes.cpp src/client/systems/i18n/Lang.cpp

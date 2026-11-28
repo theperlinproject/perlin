@@ -70,6 +70,7 @@ namespace perlin::ui {
         std::vector<uint8_t> fontScratch;
 
         int Device() const override { return scale; }
+        TextureSidecar Sidecar(const std::string& key) override { return UiAssets::Instance().Sidecar(key); }
 
         draw::TexInfo Get(const std::string& key) override {
             const auto it = textures.find(key);

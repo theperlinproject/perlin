@@ -5,6 +5,7 @@
 #include "client/systems/text/McFont.hpp"
 #include "client/ui/TenFont.hpp"
 #include "client/ui/SceneKit.hpp"
+#include "client/ui/UiTextureMeta.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -14,16 +15,12 @@
 
 namespace perlin::ui {
     namespace {
-        int Px(float v) {
-            return static_cast<int>(std::ceil(v - 0.5f));
-        }
-
         std::string Num(float v) {
             char buffer[32];
             if (std::fabs(v - std::round(v)) < 0.0005f)
                 std::snprintf(buffer, sizeof(buffer), "%d", static_cast<int>(std::lround(v)));
             else
-                std::snprintf(buffer, sizeof(buffer), "%.3f", v);
+                std::snprintf(buffer, sizeof(buffer), "%.9g", static_cast<double>(v));
             return buffer;
         }
 
@@ -57,8 +54,8 @@ namespace perlin::ui {
         count++;
         SceneNode n;
         n.kind = SceneNode::Image;
-        n.x = static_cast<float>(Px(ax));
-        n.y = static_cast<float>(Px(ay));
+        n.x = ax;
+        n.y = ay;
         n.w = w;
         n.h = h;
         n.z = std::to_string(z);
@@ -69,15 +66,21 @@ namespace perlin::ui {
             n.nine = Num(st.nine[0]) + " " + Num(st.nine[1]) + " " + Num(st.nine[2]) + " " + Num(st.nine[3]);
         if (st.tiled)
             n.tiled = std::to_string(st.tiled);
-        if (st.tileScale != 1.0f)
+        if (st.separateTileScale)
+            n.tileScale = Num(st.tileScale) + " " + Num(st.tileScaleY);
+        else if (st.tileScale != 1.0f)
             n.tileScale = Num(st.tileScale);
         if (!st.clipDirection.empty() && st.clipRatio < 1.0f)
-            n.clipDirection = st.clipDirection + " " + Num(st.clipRatio);
+            n.clipDirection = st.clipDirection + " " + Num(st.clipRatio) + (st.clipPixelPerfect ? " pixelperfect" : "");
+        if (st.baseW > 0 && st.baseH > 0)
+            n.baseSize = Num(st.baseW) + " " + Num(st.baseH);
         if (st.r != 1.0f || st.g != 1.0f || st.b != 1.0f)
             n.tint = Num(st.r) + " " + Num(st.g) + " " + Num(st.b);
         if (st.alpha != 1.0f)
             n.alpha = Num(st.alpha);
-        if (st.keepRatio)
+        if (st.cover)
+            n.keep = "cover";
+        else if (st.keepRatio)
             n.keep = "1";
         n.id = st.id;
         Builder().Add(std::move(n));
@@ -126,11 +129,12 @@ namespace perlin::ui {
     }
 
     void SceneWriter::BeginBox(float ax, float ay, float w, float h, int z, const std::string& cls,
-                               const std::string& id, bool clip, float scroll, const BoxSound& sound) {
+                               const std::string& id, bool clip, float scroll, const BoxSound& sound, bool inheritedClip) {
         count++;
         SceneNode n;
         n.kind = SceneNode::Box;
         n.cls = cls;
+        n.inheritedClip = inheritedClip;
         if (clip)
             n.cls += n.cls.empty() ? "clip" : " clip";
         n.id = id;
@@ -200,8 +204,8 @@ namespace perlin::ui {
         count++;
         SceneNode n;
         n.kind = SceneNode::Item;
-        n.x = static_cast<float>(Px(ax));
-        n.y = static_cast<float>(Px(ay));
+        n.x = ax;
+        n.y = ay;
         n.w = w;
         n.h = h;
         n.z = std::to_string(z);
@@ -236,8 +240,8 @@ namespace perlin::ui {
         else if (st.shadow)
             n.family += "-shadow";
         n.family += "-size-" + Num(size);
-        n.x = static_cast<float>(Px(ax));
-        n.y = static_cast<float>(Px(ay));
+        n.x = ax;
+        n.y = ay;
         n.w = std::max(w, 1.0f);
         n.h = h;
         n.z = std::to_string(z);
@@ -316,38 +320,37 @@ namespace perlin::ui {
             st.uw = static_cast<float>(uv->array[0].NumberOr(-1));
             st.vh = static_cast<float>(uv->array[1].NumberOr(-1));
         }
-        if (const json::Value* ns = n.Get("nineslice_size")) {
-            if (ns->IsNumber()) {
-                st.hasNine = true;
-                for (float& v : st.nine)
-                    v = static_cast<float>(ns->number);
-            } else if (ns->IsArray() && ns->array.size() >= 4) {
-                st.hasNine = true;
-                for (int i = 0; i < 4; i++)
-                    st.nine[i] = static_cast<float>(ns->array[static_cast<size_t>(i)].NumberOr(0));
-            } else if (ns->IsArray() && ns->array.size() == 2) {
-                st.hasNine = true;
-                st.nine[0] = st.nine[2] = static_cast<float>(ns->array[0].NumberOr(0));
-                st.nine[1] = st.nine[3] = static_cast<float>(ns->array[1].NumberOr(0));
-            }
+        if (st.uw == 0 && st.vh == 0) st.uw = st.vh = -1;
+        st.hasNine = ReadNineSlice(n.Get("nineslice_size"), st.nine);
+        if (const auto* base = n.Get("base_size"); base && base->IsArray() && base->array.size() == 2) {
+            st.baseW = static_cast<float>(base->array[0].NumberOr(0));
+            st.baseH = static_cast<float>(base->array[1].NumberOr(0));
         }
         if (const json::Value* t = n.Get("tiled")) {
             if (t->IsBool() && t->boolean)
                 st.tiled = 1;
             else if (t->IsString())
-                st.tiled = t->string == "x" ? 2 : t->string == "y" ? 3 : (t->string == "true" ? 1 : 0);
+                st.tiled = t->string == "x" ? 2 : t->string == "y" ? 3 : (t->string == "true" || t->string == "xy" || t->string == "yx" ? 1 : 0);
         }
         st.tileScale = static_cast<float>(n.Num("tiled_scale", 1.0));
-        st.clipDirection = n.Str("clip_direction", "left");
-        float ratio = 1.0f;
-        if (const json::Value* c = n.bag.Find("#clip_ratio"); c && c->IsNumber())
-            ratio = static_cast<float>(c->number);
-        else if (const json::Value* c2 = n.Get("clip_ratio"); c2 && c2->IsNumber())
-            ratio = static_cast<float>(c2->number);
-        st.clipRatio = std::clamp(ratio, 0.0f, 1.0f);
-        ReadColor(n.Get("color"), st.r, st.g, st.b);
-        st.alpha = n.alpha;
-        st.keepRatio = n.Bool("keep_ratio", true) && !st.hasNine && !st.tiled;
+        if (const auto* tile = n.Get("tiled_scale"); tile && tile->IsArray() && tile->array.size() == 2) {
+            st.tileScale = static_cast<float>(tile->array[0].NumberOr(1));
+            st.tileScaleY = static_cast<float>(tile->array[1].NumberOr(1));
+            st.separateTileScale = true;
+        }
+        st.clipDirection = n.Str("clip_direction", "none");
+        float removed = 0.0f;
+        const json::Value* clip = n.bag.Find("#clip-ratio");
+        if (!clip) clip = n.bag.Find("#clip_ratio");
+        if (!clip) clip = n.Get("clip_ratio");
+        if (clip && clip->IsNumber()) removed = static_cast<float>(clip->number);
+        st.clipRatio = 1.0f - std::clamp(removed, 0.0f, 1.0f);
+        st.clipPixelPerfect = n.Bool("clip_pixelperfect", true);
+        float colorAlpha = 1.0f;
+        ReadColor(n.Get("color"), st.r, st.g, st.b, &colorAlpha);
+        st.alpha = colorAlpha * n.alpha;
+        st.cover = n.Bool("fill", false);
+        st.keepRatio = n.Bool("keep_ratio", true);
         if (st.alpha <= 0.0f)
             return;
         out.Image(n.ax, n.ay, n.w, n.h, n.layer, texture, st);
@@ -773,7 +776,7 @@ namespace perlin::ui {
             return;
         const bool clips = clipFlag;
         if (clips)
-            out.BeginBox(n.ax, n.ay, n.w, n.h, TopLayer(n), "", "", true);
+            out.BeginBox(n.ax, n.ay, n.w, n.h, SceneWriter::kAutoZ, "", "", true, 0.0f, {}, true);
         for (const auto& kid : n.kids)
             Visit(*kid, out);
         if (clips)

@@ -109,6 +109,11 @@ namespace perlin::ui {
         services.textureSize = [](const std::string& tex, int& w, int& h) {
             return UiAssets::Instance().ImageSize(tex, w, h);
         };
+        services.textureBaseSize = [](const std::string& tex, int& w, int& h) {
+            const auto meta = UiAssets::Instance().Sidecar(tex);
+            w = meta.baseW; h = meta.baseH;
+            return w > 0 && h > 0;
+        };
         services.localize = [](const std::string& key) { return UiAssets::Instance().Localize(key); };
 
         services.anim = &animHost;

@@ -1,0 +1,1949 @@
+{
+  "namespace": "parity",
+  "pixels": {
+    "type": "screen",
+    "controls": [
+      {
+        "background": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            0,
+            0
+          ],
+          "size": [
+            320,
+            180
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "layer": -100,
+          "color": [
+            0.0784313725490196,
+            0.09411764705882353,
+            0.12549019607843137
+          ]
+        }
+      },
+      {
+        "clip_bg_0": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_0": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "left",
+          "clip_ratio": 0.25,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_1": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            47,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_1": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            47,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "right",
+          "clip_ratio": 0.25,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_2": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            86,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_2": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            86,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "up",
+          "clip_ratio": 0.5,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_3": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            125,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_3": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            125,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "down",
+          "clip_ratio": 0.5,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_4": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            164,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_4": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            164,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "center",
+          "clip_ratio": 0.5,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_5": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            203,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_5": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            203,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "left",
+          "clip_ratio": 0,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_6": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            242,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_6": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            242,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "left",
+          "clip_ratio": 1,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_7": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            281,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_7": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            281,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "right",
+          "clip_ratio": 0.3,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "frame": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            54
+          ],
+          "size": [
+            66,
+            38
+          ],
+          "texture": "textures/ui/frame",
+          "keep_ratio": false
+        }
+      },
+      {
+        "tiles": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            84,
+            54
+          ],
+          "size": [
+            50,
+            38
+          ],
+          "texture": "textures/ui/tile",
+          "keep_ratio": false,
+          "tiled": "xy",
+          "tiled_scale": [
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "contain": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            146,
+            54
+          ],
+          "size": [
+            36,
+            36
+          ],
+          "texture": "textures/ui/strip",
+          "keep_ratio": true
+        }
+      },
+      {
+        "cover": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            194,
+            54
+          ],
+          "size": [
+            36,
+            36
+          ],
+          "texture": "textures/ui/strip",
+          "keep_ratio": false,
+          "fill": true
+        }
+      },
+      {
+        "uv": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            242,
+            54
+          ],
+          "size": [
+            32,
+            36
+          ],
+          "texture": "textures/ui/strip",
+          "keep_ratio": false,
+          "uv": [
+            4,
+            0
+          ],
+          "uv_size": [
+            4,
+            4
+          ]
+        }
+      },
+      {
+        "fractional": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            286.5,
+            54.5
+          ],
+          "size": [
+            21,
+            36
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.9647058823529412,
+            0.615686274509804,
+            0.21176470588235294
+          ]
+        }
+      },
+      {
+        "clip_level_0": {
+          "type": "panel",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            118
+          ],
+          "size": [
+            75,
+            48
+          ],
+          "clips_children": true,
+          "controls": [
+            {
+              "clip_level_1": {
+                "type": "panel",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  2,
+                  2
+                ],
+                "size": [
+                  71,
+                  44
+                ],
+                "clips_children": true,
+                "controls": [
+                  {
+                    "clip_level_2": {
+                      "type": "panel",
+                      "anchor_from": "top_left",
+                      "anchor_to": "top_left",
+                      "offset": [
+                        2,
+                        2
+                      ],
+                      "size": [
+                        67,
+                        40
+                      ],
+                      "clips_children": true,
+                      "controls": [
+                        {
+                          "clip_level_3": {
+                            "type": "panel",
+                            "anchor_from": "top_left",
+                            "anchor_to": "top_left",
+                            "offset": [
+                              2,
+                              2
+                            ],
+                            "size": [
+                              63,
+                              36
+                            ],
+                            "clips_children": true,
+                            "controls": [
+                              {
+                                "clip_level_4": {
+                                  "type": "panel",
+                                  "anchor_from": "top_left",
+                                  "anchor_to": "top_left",
+                                  "offset": [
+                                    2,
+                                    2
+                                  ],
+                                  "size": [
+                                    59,
+                                    32
+                                  ],
+                                  "clips_children": true,
+                                  "controls": [
+                                    {
+                                      "clip_level_5": {
+                                        "type": "panel",
+                                        "anchor_from": "top_left",
+                                        "anchor_to": "top_left",
+                                        "offset": [
+                                          2,
+                                          2
+                                        ],
+                                        "size": [
+                                          55,
+                                          28
+                                        ],
+                                        "clips_children": true,
+                                        "controls": [
+                                          {
+                                            "clip_level_6": {
+                                              "type": "panel",
+                                              "anchor_from": "top_left",
+                                              "anchor_to": "top_left",
+                                              "offset": [
+                                                2,
+                                                2
+                                              ],
+                                              "size": [
+                                                51,
+                                                24
+                                              ],
+                                              "clips_children": true,
+                                              "controls": [
+                                                {
+                                                  "clip_level_7": {
+                                                    "type": "panel",
+                                                    "anchor_from": "top_left",
+                                                    "anchor_to": "top_left",
+                                                    "offset": [
+                                                      2,
+                                                      2
+                                                    ],
+                                                    "size": [
+                                                      47,
+                                                      20
+                                                    ],
+                                                    "clips_children": true,
+                                                    "controls": [
+                                                      {
+                                                        "clip_level_8": {
+                                                          "type": "panel",
+                                                          "anchor_from": "top_left",
+                                                          "anchor_to": "top_left",
+                                                          "offset": [
+                                                            2,
+                                                            2
+                                                          ],
+                                                          "size": [
+                                                            43,
+                                                            16
+                                                          ],
+                                                          "clips_children": true,
+                                                          "controls": [
+                                                            {
+                                                              "clipped_image": {
+                                                                "type": "image",
+                                                                "anchor_from": "top_left",
+                                                                "anchor_to": "top_left",
+                                                                "offset": [
+                                                                  -30,
+                                                                  -30
+                                                                ],
+                                                                "size": [
+                                                                  110,
+                                                                  110
+                                                                ],
+                                                                "texture": "textures/ui/white",
+                                                                "keep_ratio": false,
+                                                                "color": [
+                                                                  0.25098039215686274,
+                                                                  0.8235294117647058,
+                                                                  0.4823529411764706
+                                                                ]
+                                                              }
+                                                            }
+                                                          ]
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "layer_parent": {
+          "type": "panel",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            98,
+            118
+          ],
+          "size": [
+            80,
+            48
+          ],
+          "clips_children": true,
+          "controls": [
+            {
+              "behind": {
+                "type": "image",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  0,
+                  0
+                ],
+                "size": [
+                  50,
+                  34
+                ],
+                "texture": "textures/ui/white",
+                "keep_ratio": false,
+                "color": [
+                  0.8784313725490196,
+                  0.3333333333333333,
+                  0.6784313725490196
+                ],
+                "layer": -2
+              }
+            },
+            {
+              "front": {
+                "type": "image",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  24,
+                  12
+                ],
+                "size": [
+                  50,
+                  34
+                ],
+                "texture": "textures/ui/white",
+                "keep_ratio": false,
+                "color": [
+                  0.9647058823529412,
+                  0.615686274509804,
+                  0.21176470588235294
+                ],
+                "layer": 2
+              }
+            }
+          ]
+        }
+      },
+      {
+        "between": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            112,
+            126
+          ],
+          "size": [
+            48,
+            26
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "layer": 1,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "opacity": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            190,
+            118
+          ],
+          "size": [
+            54,
+            48
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "alpha": 0.5,
+          "color": [
+            0.9411764705882353,
+            0.6274509803921569,
+            0.3137254901960784
+          ]
+        }
+      },
+      {
+        "bound_clip": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            256,
+            118
+          ],
+          "size": [
+            52,
+            48
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "left",
+          "bindings": [
+            {
+              "binding_type": "global",
+              "binding_name": "#test_clip",
+              "binding_name_override": "#clip_ratio"
+            }
+          ],
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      }
+    ]
+  },
+  "diagnostic": {
+    "type": "screen",
+    "controls": [
+      {
+        "background": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            0,
+            0
+          ],
+          "size": [
+            320,
+            180
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "layer": -100,
+          "color": [
+            0.0784313725490196,
+            0.09411764705882353,
+            0.12549019607843137
+          ]
+        }
+      },
+      {
+        "clip_bg_0": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_0": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "left",
+          "clip_ratio": 0.25,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_1": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            47,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_1": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            47,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "right",
+          "clip_ratio": 0.25,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_2": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            86,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_2": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            86,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "up",
+          "clip_ratio": 0.5,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_3": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            125,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_3": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            125,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "down",
+          "clip_ratio": 0.5,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_4": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            164,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_4": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            164,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "center",
+          "clip_ratio": 0.5,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_5": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            203,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_5": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            203,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "left",
+          "clip_ratio": 0,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_6": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            242,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_6": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            242,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "left",
+          "clip_ratio": 1,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "clip_bg_7": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            281,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.15294117647058825,
+            0.18823529411764706,
+            0.24313725490196078
+          ]
+        }
+      },
+      {
+        "clip_7": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            281,
+            12
+          ],
+          "size": [
+            32,
+            24
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "right",
+          "clip_ratio": 0.3,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "frame": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            54
+          ],
+          "size": [
+            66,
+            38
+          ],
+          "texture": "textures/ui/frame",
+          "keep_ratio": false
+        }
+      },
+      {
+        "tiles": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            84,
+            54
+          ],
+          "size": [
+            50,
+            38
+          ],
+          "texture": "textures/ui/tile",
+          "keep_ratio": false,
+          "tiled": "xy",
+          "tiled_scale": [
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "contain": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            146,
+            54
+          ],
+          "size": [
+            36,
+            36
+          ],
+          "texture": "textures/ui/strip",
+          "keep_ratio": true
+        }
+      },
+      {
+        "cover": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            194,
+            54
+          ],
+          "size": [
+            36,
+            36
+          ],
+          "texture": "textures/ui/strip",
+          "keep_ratio": false,
+          "fill": true
+        }
+      },
+      {
+        "uv": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            242,
+            54
+          ],
+          "size": [
+            32,
+            36
+          ],
+          "texture": "textures/ui/strip",
+          "keep_ratio": false,
+          "uv": [
+            4,
+            0
+          ],
+          "uv_size": [
+            4,
+            4
+          ]
+        }
+      },
+      {
+        "fractional": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            286.5,
+            54.5
+          ],
+          "size": [
+            21,
+            36
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "color": [
+            0.9647058823529412,
+            0.615686274509804,
+            0.21176470588235294
+          ]
+        }
+      },
+      {
+        "clip_level_0": {
+          "type": "panel",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            118
+          ],
+          "size": [
+            75,
+            48
+          ],
+          "clips_children": true,
+          "controls": [
+            {
+              "clip_level_1": {
+                "type": "panel",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  2,
+                  2
+                ],
+                "size": [
+                  71,
+                  44
+                ],
+                "clips_children": true,
+                "controls": [
+                  {
+                    "clip_level_2": {
+                      "type": "panel",
+                      "anchor_from": "top_left",
+                      "anchor_to": "top_left",
+                      "offset": [
+                        2,
+                        2
+                      ],
+                      "size": [
+                        67,
+                        40
+                      ],
+                      "clips_children": true,
+                      "controls": [
+                        {
+                          "clip_level_3": {
+                            "type": "panel",
+                            "anchor_from": "top_left",
+                            "anchor_to": "top_left",
+                            "offset": [
+                              2,
+                              2
+                            ],
+                            "size": [
+                              63,
+                              36
+                            ],
+                            "clips_children": true,
+                            "controls": [
+                              {
+                                "clip_level_4": {
+                                  "type": "panel",
+                                  "anchor_from": "top_left",
+                                  "anchor_to": "top_left",
+                                  "offset": [
+                                    2,
+                                    2
+                                  ],
+                                  "size": [
+                                    59,
+                                    32
+                                  ],
+                                  "clips_children": true,
+                                  "controls": [
+                                    {
+                                      "clip_level_5": {
+                                        "type": "panel",
+                                        "anchor_from": "top_left",
+                                        "anchor_to": "top_left",
+                                        "offset": [
+                                          2,
+                                          2
+                                        ],
+                                        "size": [
+                                          55,
+                                          28
+                                        ],
+                                        "clips_children": true,
+                                        "controls": [
+                                          {
+                                            "clip_level_6": {
+                                              "type": "panel",
+                                              "anchor_from": "top_left",
+                                              "anchor_to": "top_left",
+                                              "offset": [
+                                                2,
+                                                2
+                                              ],
+                                              "size": [
+                                                51,
+                                                24
+                                              ],
+                                              "clips_children": true,
+                                              "controls": [
+                                                {
+                                                  "clip_level_7": {
+                                                    "type": "panel",
+                                                    "anchor_from": "top_left",
+                                                    "anchor_to": "top_left",
+                                                    "offset": [
+                                                      2,
+                                                      2
+                                                    ],
+                                                    "size": [
+                                                      47,
+                                                      20
+                                                    ],
+                                                    "clips_children": true,
+                                                    "controls": [
+                                                      {
+                                                        "clip_level_8": {
+                                                          "type": "panel",
+                                                          "anchor_from": "top_left",
+                                                          "anchor_to": "top_left",
+                                                          "offset": [
+                                                            2,
+                                                            2
+                                                          ],
+                                                          "size": [
+                                                            43,
+                                                            16
+                                                          ],
+                                                          "clips_children": true,
+                                                          "controls": [
+                                                            {
+                                                              "clipped_image": {
+                                                                "type": "image",
+                                                                "anchor_from": "top_left",
+                                                                "anchor_to": "top_left",
+                                                                "offset": [
+                                                                  -30,
+                                                                  -30
+                                                                ],
+                                                                "size": [
+                                                                  110,
+                                                                  110
+                                                                ],
+                                                                "texture": "textures/ui/white",
+                                                                "keep_ratio": false,
+                                                                "color": [
+                                                                  0.25098039215686274,
+                                                                  0.8235294117647058,
+                                                                  0.4823529411764706
+                                                                ]
+                                                              }
+                                                            }
+                                                          ]
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "layer_parent": {
+          "type": "panel",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            98,
+            118
+          ],
+          "size": [
+            80,
+            48
+          ],
+          "clips_children": true,
+          "controls": [
+            {
+              "behind": {
+                "type": "image",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  0,
+                  0
+                ],
+                "size": [
+                  50,
+                  34
+                ],
+                "texture": "textures/ui/white",
+                "keep_ratio": false,
+                "color": [
+                  0.8784313725490196,
+                  0.3333333333333333,
+                  0.6784313725490196
+                ],
+                "layer": -2
+              }
+            },
+            {
+              "front": {
+                "type": "image",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  24,
+                  12
+                ],
+                "size": [
+                  50,
+                  34
+                ],
+                "texture": "textures/ui/white",
+                "keep_ratio": false,
+                "color": [
+                  0.9647058823529412,
+                  0.615686274509804,
+                  0.21176470588235294
+                ],
+                "layer": 2
+              }
+            }
+          ]
+        }
+      },
+      {
+        "between": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            112,
+            126
+          ],
+          "size": [
+            48,
+            26
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "layer": 1,
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "opacity": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            190,
+            118
+          ],
+          "size": [
+            54,
+            48
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "alpha": 0.5,
+          "color": [
+            0.9411764705882353,
+            0.6274509803921569,
+            0.3137254901960784
+          ]
+        }
+      },
+      {
+        "bound_clip": {
+          "type": "image",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            256,
+            118
+          ],
+          "size": [
+            52,
+            48
+          ],
+          "texture": "textures/ui/white",
+          "keep_ratio": false,
+          "clip_direction": "left",
+          "bindings": [
+            {
+              "binding_type": "global",
+              "binding_name": "#test_clip",
+              "binding_name_override": "#clip_ratio"
+            }
+          ],
+          "color": [
+            0.2549019607843137,
+            0.7098039215686275,
+            0.9607843137254902
+          ]
+        }
+      },
+      {
+        "header": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            1
+          ],
+          "size": [
+            310,
+            10
+          ],
+          "text": "CLIP: LEFT / RIGHT / UP / DOWN / CENTER / ZERO / FULL / TEXEL",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "frame_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            42
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "NINE SLICE",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "tile_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            84,
+            42
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "XY TILE",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "contain_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            146,
+            42
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "CONTAIN",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "cover_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            194,
+            42
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "COVER",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "uv_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            242,
+            42
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "UV",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "frac_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            286,
+            42
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "SNAP",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "deep_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            8,
+            106
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "9 CLIPS",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "layer_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            98,
+            106
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "LAYERS",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "opacity_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            190,
+            106
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "ALPHA",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      },
+      {
+        "binding_label": {
+          "type": "label",
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            256,
+            106
+          ],
+          "size": [
+            80,
+            10
+          ],
+          "text": "BINDING",
+          "font_scale_factor": 0.75,
+          "layer": 20,
+          "color": [
+            0.86,
+            0.9,
+            0.96
+          ],
+          "shadow": false
+        }
+      }
+    ]
+  }
+}

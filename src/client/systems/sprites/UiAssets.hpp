@@ -1,5 +1,6 @@
 #pragma once
 #include <atomic>
+#include "client/ui/UiTextureMeta.hpp"
 #include <cstdint>
 #include "client/systems/resources/TextureLoader.hpp"
 #include "client/systems/model/HudState.hpp"
@@ -37,13 +38,6 @@ namespace perlin::ui {
         int tile = 0;
         std::vector<uint8_t> top, left, right;
         uint32_t tint = 0xffffffff;
-    };
-
-    struct TextureSidecar {
-        bool present = false;
-        bool nine = false;
-        float slice[4] = {0, 0, 0, 0};
-        int baseW = 0, baseH = 0;
     };
 
     class UiAssets {

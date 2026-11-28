@@ -309,21 +309,7 @@ namespace perlin::ui {
             json::Value json;
             std::string error;
             if (json::Value::Parse(text, json, error) && json.IsObject()) {
-                out.present = true;
-                if (const json::Value* n = json.Find("nineslice_size")) {
-                    out.nine = true;
-                    if (n->IsNumber()) {
-                        for (float& v : out.slice)
-                            v = static_cast<float>(n->number);
-                    } else if (n->IsArray() && n->array.size() >= 4) {
-                        for (int i = 0; i < 4; i++)
-                            out.slice[i] = static_cast<float>(n->array[i].NumberOr(0));
-                    }
-                }
-                if (const json::Value* b = json.Find("base_size"); b && b->IsArray() && b->array.size() >= 2) {
-                    out.baseW = static_cast<int>(b->array[0].NumberOr(0));
-                    out.baseH = static_cast<int>(b->array[1].NumberOr(0));
-                }
+                out = ParseTextureSidecar(json);
             }
         }
         sidecars[rel] = out;

@@ -3,6 +3,7 @@
 #include "client/screen/screens/ScreenSupport.hpp"
 #include "client/systems/multiplayer/BedrockSession.hpp"
 #include "client/systems/config/Options.hpp"
+#include "client/systems/i18n/Lang.hpp"
 #include "client/systems/input/Input.hpp"
 #include "client/ui/ChatLog.hpp"
 #include "client/systems/resources/ServerPacks.hpp"
@@ -204,7 +205,7 @@ namespace perlin::ui {
     }
 
     int FormSliderAt(const std::string& hoverId) {
-        if (hoverId.size() < 4 || hoverId[0] != 'k' || hoverId[1] != ':')
+        if (hoverId.size() < 3 || hoverId[0] != 'k' || hoverId[1] != ':')
             return -1;
         return std::atoi(hoverId.c_str() + 2);
     }
@@ -213,7 +214,7 @@ namespace perlin::ui {
         if (index < 0 || static_cast<size_t>(index) >= form.elements.size())
             return false;
         FormElement& e = form.elements[static_cast<size_t>(index)];
-        if (e.trackW <= 1.0f)
+        if (e.disabled || !e.visible || e.trackW <= 1.0f)
             return false;
         const double f = std::clamp(static_cast<double>((guiX - e.trackX) / e.trackW), 0.0, 1.0);
         if (e.kind == FormElement::Kind::Slider) {
@@ -283,6 +284,7 @@ namespace perlin::ui {
                         el.min = e.Find("min") ? e.Find("min")->NumberOr(0) : 0;
                         el.max = e.Find("max") ? e.Find("max")->NumberOr(1) : 1;
                         el.step = e.Find("step") ? e.Find("step")->NumberOr(1) : 1;
+                        el.max = std::max(el.max, el.min);
                         if (el.step <= 0)
                             el.step = 1;
                         el.number = e.Find("default") ? e.Find("default")->NumberOr(el.min) : el.min;
@@ -326,6 +328,135 @@ namespace perlin::ui {
         return true;
     }
 
+    namespace {
+        bool Flag(const json::Value* v, bool fallback = false) {
+            return v ? v->IsBool() ? v->boolean : v->IsNumber() ? v->number != 0 : fallback : fallback;
+        }
+        double Number(const json::Value* v, double fallback) {
+            return v && v->IsNumber() && std::isfinite(v->number) ? v->number : fallback;
+        }
+        std::string DduiText(const json::Value* v, unsigned depth = 0) {
+            if (!v || depth > 16) return {};
+            if (v->IsString()) return v->string;
+            if (const auto* t = v->Find("text")) return DduiText(t, depth + 1);
+            if (const auto* t = v->Find("translate"); t && t->IsString()) {
+                std::vector<std::string> args;
+                if (const auto* with = v->Find("with")) {
+                    for (const auto& item : with->array) args.push_back(DduiText(&item, depth + 1));
+                    for (const auto& item : with->object) args.push_back(DduiText(&item.second, depth + 1));
+                }
+                return i18n::Tr(t->string, args);
+            }
+            const auto* parts = v->Find("rawtext");
+            if (!parts) parts = v;
+            std::string result;
+            for (const auto& item : parts->array) result += DduiText(&item, depth + 1);
+            if (parts != v)
+                for (const auto& item : parts->object) result += DduiText(&item.second, depth + 1);
+            return result;
+        }
+        std::string FieldPath(const json::Value& root, const std::string& base, const char* key) {
+            const std::string path = base.empty() ? key : base + "." + key;
+            return DduiState::At(root, path) ? path : std::string{};
+        }
+        // Decode the built-in modalForm data contract, not arbitrary Ore UI compositions.
+        bool ParseDdui(const DduiScreen& screen, const json::Value& root, FormModel& model) {
+            if (screen.StoreName().empty() || !root.IsObject()) return false;
+            FormModel out;
+            out.id = screen.formId; out.ddui = true; out.type = FormModel::Type::Custom;
+            out.title = DduiText(root.Find("title"));
+            out.showClose = Flag(root.Find("closeButton"), true);
+            auto addButton = [&](const json::Value& row, const std::string& base) {
+                FormElement e;
+                e.kind = FormElement::Kind::Button;
+                e.text = DduiText(row.Find("label"));
+                if (e.text.empty()) e.text = DduiText(row.Find("text"));
+                e.visible = Flag(row.Find("visible"), true);
+                e.wirePath = FieldPath(root, base, "onClick");
+                const auto* click = DduiState::At(root, e.wirePath);
+                e.disabled = Flag(row.Find("disabled")) || e.wirePath.empty() || !click || !click->IsBool();
+                out.elements.push_back(std::move(e));
+            };
+            if (screen.screenId == "minecraft:message_box") {
+                FormElement body; body.text = DduiText(root.Find("body")); out.elements.push_back(std::move(body));
+                for (const char* key : {"button1", "button2", "button3"})
+                    if (const auto* row = root.Find(key); row && row->IsObject()) addButton(*row, key);
+            } else {
+                const auto* layout = root.Find("layout");
+                int count = static_cast<int>(std::clamp(Number(root.Find("length"), layout ?
+                    static_cast<double>(layout->IsArray() ? layout->array.size() : layout->object.size()) : 0), 0.0, 2048.0));
+                for (int i = 0; i < count; ++i) {
+                    const std::string base = "layout[" + std::to_string(i) + "]";
+                    const auto* row = DduiState::At(root, base);
+                    if (!row || !row->IsObject()) continue;
+                    FormElement e;
+                    e.text = DduiText(row->Find("label"));
+                    if (e.text.empty()) e.text = DduiText(row->Find("text"));
+                    e.visible = Flag(row->Find("visible"), true);
+                    e.disabled = Flag(row->Find("disabled"));
+                    const char* field = nullptr;
+                    if (Flag(row->Find("toggle_visible"))) {
+                        e.kind = FormElement::Kind::Toggle; field = "toggled"; e.flag = Flag(row->Find(field));
+                    } else if (Flag(row->Find("slider_visible"))) {
+                        e.kind = FormElement::Kind::Slider; field = "value";
+                        e.min = Number(row->Find("minValue"), 0); e.max = std::max(e.min, Number(row->Find("maxValue"), 1));
+                        e.step = Number(row->Find("step"), 1); if (e.step <= 0) e.step = 1;
+                        e.number = std::clamp(Number(row->Find(field), e.min), e.min, e.max);
+                    } else if (Flag(row->Find("textfield_visible"))) {
+                        e.kind = FormElement::Kind::Input; field = "value";
+                        if (!row->Find(field) || !row->Find(field)->IsString()) field = "text";
+                        e.value = Str(row->Find(field)); e.placeholder = DduiText(row->Find("placeholder"));
+                    } else if (Flag(row->Find("dropdown_visible"))) {
+                        e.kind = FormElement::Kind::Dropdown; field = "value";
+                        if (const auto* items = row->Find("items")) {
+                            for (const auto& item : items->array) e.options.push_back(DduiText(&item));
+                            for (size_t j = 0; j < items->object.size(); ++j) {
+                                const auto* item = items->Find(std::to_string(j));
+                                e.options.push_back(DduiText(item ? item : &items->object[j].second));
+                            }
+                        }
+                        if (e.options.empty()) { e.options.push_back(""); e.disabled = true; }
+                        e.index = static_cast<int>(std::clamp(Number(row->Find(field), 0), 0.0, static_cast<double>(e.options.size() - 1)));
+                    } else if (Flag(row->Find("header_visible"))) e.kind = FormElement::Kind::Header;
+                    else if (Flag(row->Find("divider_visible"))) e.kind = FormElement::Kind::Divider;
+                    else if (Flag(row->Find("spacer_visible"))) e.kind = FormElement::Kind::Spacer;
+                    else if (Flag(row->Find("row_visible")) && row->Find("onClick")) { addButton(*row, base); continue; }
+                    else if (Flag(row->Find("label_visible"))) e.kind = FormElement::Kind::Label;
+                    else { e.visible = false; }
+                    if (field) {
+                        e.wirePath = FieldPath(root, base, field);
+                        const auto* value = DduiState::At(root, e.wirePath);
+                        const bool compatible = value && (e.kind == FormElement::Kind::Toggle ? value->IsBool() :
+                            e.kind == FormElement::Kind::Input ? value->IsString() : value->IsNumber());
+                        e.disabled = e.disabled || e.wirePath.empty() || !compatible;
+                    }
+                    out.elements.push_back(std::move(e));
+                }
+            }
+            // Preserve edit focus only if the same writable control still exists.
+            auto remap = [&](int old) {
+                if (old < 0 || static_cast<size_t>(old) >= model.elements.size()) return -1;
+                const auto& key = model.elements[old].wirePath;
+                if (key.empty()) return -1;
+                for (size_t i = 0; i < out.elements.size(); ++i)
+                    if (out.elements[i].wirePath == key && out.elements[i].visible && !out.elements[i].disabled) return static_cast<int>(i);
+                return -1;
+            };
+            out.focus = remap(model.focus); out.openDropdown = remap(model.openDropdown);
+            model = std::move(out);
+            return true;
+        }
+        json::Value DduiControlValue(const FormElement& e) {
+            switch (e.kind) {
+                case FormElement::Kind::Input: return json::Value(e.value);
+                case FormElement::Kind::Toggle: return json::Value(e.flag);
+                case FormElement::Kind::Slider: return json::Value(e.number);
+                case FormElement::Kind::Dropdown: return json::Value(e.index);
+                default: return {};
+            }
+        }
+    }
+
     SceneDoc BuildFormScene(const FormModel& form, int guiW, int guiH, float scroll, float& contentHeight,
                             float& viewHeight) {
         const float panelW = static_cast<float>(std::min(guiW - 16, 260));
@@ -367,8 +498,14 @@ namespace perlin::ui {
         } else {
             for (size_t i = 0; i < form.elements.size(); i++) {
                 const FormElement& e = form.elements[i];
+                if (!e.visible) continue;
                 const std::string n = std::to_string(i);
+                const auto action = [&](const std::string& id) { return e.disabled ? std::string{} : id; };
                 switch (e.kind) {
+                case FormElement::Kind::Button:
+                    Button(b, action("a:" + n), e.text, 10, y, inner, 20); y += 24; break;
+                case FormElement::Kind::Spacer:
+                    y += 8; break;
                 case FormElement::Kind::Label:
                     text(e.text, false);
                     break;
@@ -388,7 +525,7 @@ namespace perlin::ui {
                                                                               e.placeholder
                                               : focus ? TextFieldPlain(e.value, true)
                                                       : e.value;
-                    kit::Begin(b, 10, y, inner, 20, focus ? "field focus" : "field", "i:" + n, "5");
+                    kit::Begin(b, 10, y, inner, 20, focus ? "field focus" : "field", action("i:" + n), "5");
                     kit::Box(b, 1, 1, inner - 2, 18, "in");
                     SceneNode& txt = kit::Label(b, 4, 5, inner - 8, "txt", ParseFormatLines(shown, ""));
                     txt.h = 9;
@@ -397,7 +534,7 @@ namespace perlin::ui {
                     break;
                 }
                 case FormElement::Kind::Toggle:
-                    Button(b, "t:" + n,
+                    Button(b, action("t:" + n),
                            e.text + ": " +
                                (e.flag ? "\xC2\xA7"
                                          "aON"
@@ -407,8 +544,14 @@ namespace perlin::ui {
                     y += 24.0f;
                     break;
                 case FormElement::Kind::Dropdown:
-                    Button(b, "d:" + n, e.text + ": " + e.options[static_cast<size_t>(e.index)], 10, y, inner, 20);
+                    Button(b, action("d:" + n), e.text + ": " + e.options[static_cast<size_t>(e.index)], 10, y, inner, 20);
                     y += 24.0f;
+                    if (!e.disabled && form.openDropdown == static_cast<int>(i)) {
+                        for (size_t j = 0; j < e.options.size(); ++j) {
+                            Button(b, "r:" + std::to_string(j), e.options[j], 14, y, inner - 8, 20);
+                            y += 24.0f;
+                        }
+                    }
                     break;
                 case FormElement::Kind::Slider:
                 case FormElement::Kind::StepSlider: {
@@ -424,7 +567,7 @@ namespace perlin::ui {
                     e.trackX = panelX + 10.0f + 4.0f;
                     e.trackW = inner - 8.0f;
                     const float knobX = 10.0f + 1.0f + static_cast<float>(frac) * (inner - 10.0f);
-                    Button(b, "k:" + n,
+                    Button(b, action("k:" + n),
                            e.text + ": " + (plain ? Num(e.number) : e.options[static_cast<size_t>(e.index)]), 10, y,
                            inner, 20, [&] {
                                kit::Begin(b, knobX - 10.0f, 0, 8, 20, "knob", {}, "7");
@@ -439,8 +582,10 @@ namespace perlin::ui {
                 }
                 }
             }
-            Button(b, "submit", form.submit.empty() ? "Submit" : form.submit, 10, y, inner, 20);
-            y += 24.0f;
+            if (!form.ddui) {
+                Button(b, "submit", form.submit.empty() ? "Submit" : form.submit, 10, y, inner, 20);
+                y += 24.0f;
+            }
         }
         contentHeight = y + 6.0f;
         const float maxScroll = std::max(0.0f, contentHeight - viewHeight);
@@ -454,7 +599,7 @@ namespace perlin::ui {
         kit::Box(top, panelX, viewTop - 18, panelW, visible + 24, "panel", "panel", "2");
         SceneNode& title = kit::Label(top, panelX, viewTop - 13, panelW, "t c", ParseFormatLines(form.title, ""), "4");
         title.h = 9;
-        Button(top, kFormCloseId, "x", panelX + panelW - 14, viewTop - 16, 12, 12);
+        if (form.showClose) Button(top, kFormCloseId, "x", panelX + panelW - 14, viewTop - 16, 12, 12);
         SceneNode& clip = kit::Begin(top, panelX, viewTop, panelW, visible, "clip", "clip", "3");
         SceneNode& content = kit::Box(top, 0, -s, panelW, contentHeight);
         content.children = std::move(body);
@@ -539,6 +684,7 @@ namespace perlin::ui {
         if (kind == 'r') {
             const int owner = form.openDropdown, option = index;
             if (owner >= 0 && static_cast<size_t>(owner) < form.elements.size() &&
+                !form.elements[static_cast<size_t>(owner)].disabled && option >= 0 &&
                 option < static_cast<int>(form.elements[static_cast<size_t>(owner)].options.size()))
                 form.elements[static_cast<size_t>(owner)].index = option;
             form.openDropdown = -1;
@@ -547,6 +693,7 @@ namespace perlin::ui {
         if (index < 0 || static_cast<size_t>(index) >= form.elements.size())
             return false;
         FormElement& e = form.elements[static_cast<size_t>(index)];
+        if (e.disabled || !e.visible) return false;
         if (kind == 'i') {
             form.focus = index;
         } else if (kind == 't') {
@@ -567,7 +714,7 @@ namespace perlin::ui {
         if (form.focus < 0 || static_cast<size_t>(form.focus) >= form.elements.size())
             return false;
         FormElement& e = form.elements[static_cast<size_t>(form.focus)];
-        if (e.kind != FormElement::Kind::Input)
+        if (e.disabled || !e.visible || e.kind != FormElement::Kind::Input)
             return false;
         TextLimits limits;
         limits.maxBytes = 500;
@@ -1063,10 +1210,14 @@ namespace perlin::screen {
         if (!live && !previewForm) {
             if (IsOpen())
                 CloseOverlay(host, hud, *this);
+            ddui.reset();
             return;
         }
         const auto respond = [&](const std::string* response) {
-            if (live)
+            if (live && ddui) {
+                live->CloseDduiScreen(ddui->formId, "ClientCanceled");
+                ddui.reset();
+            } else if (live)
                 live->SendFormResponse(model.id, response, false);
             else
                 Log("form", "preview answer: {}", (response ? *response : std::string("closed")));
@@ -1079,17 +1230,41 @@ namespace perlin::screen {
             lastWarm = now;
             ui.Warm(host.serverPackDirectories());
         }
-        if (live && live->TakeFormClosed() && IsOpen())
+        if (live && live->TakeFormClosed() && IsOpen() && !ddui)
             CloseOverlay(host, hud, *this);
-        if (IsOpen() && !engine && ui.Ready() && !engineFailed)
+        if (live && ddui && !live->DduiScreenIsOpen(ddui->formId)) {
+            if (IsOpen()) CloseOverlay(host, hud, *this);
+            ddui.reset();
+        }
+        if (live && IsOpen()) {
+            ui::DduiScreen extra;
+            while (live->TakeDduiScreen(extra)) live->CloseDduiScreen(extra.formId, "UserBusy");
+        }
+        if (IsOpen() && !ddui && !engine && ui.Ready() && !engineFailed)
             engine = true;
 
         if (!IsOpen()) {
-            if (host.screens.IsOpen(Id::Death) || host.screens.IsOpen(Id::Inventory) || host.screens.IsOpen(Id::Pause) || host.chat.IsOpen())
+            if (host.screens.IsOpen(Id::Death) || host.screens.IsOpen(Id::Inventory) || host.screens.IsOpen(Id::Pause) || host.chat.IsOpen()) {
+                if (live) {
+                    ui::DduiScreen extra;
+                    while (live->TakeDduiScreen(extra)) live->CloseDduiScreen(extra.formId, "UserBusy");
+                }
                 return;
+            }
             BedrockSession::ServerForm sf;
-            if (live && !live->TakeServerForm(sf))
-                return;
+            ddui.reset();
+            ui::DduiScreen incoming;
+            if (live && live->TakeDduiScreen(incoming)) {
+                json::Value root;
+                dduiRevision = UINT64_MAX;
+                model = {};
+                if (!live->ReadDduiScreen(incoming, root, dduiRevision) || !ui::ParseDdui(incoming, root, model)) {
+                    live->CloseDduiScreen(incoming.formId, "InvalidForm");
+                    return;
+                }
+                ddui = incoming;
+                sf.id = incoming.formId;
+            } else if (live && !live->TakeServerForm(sf)) return;
             if (!live) {
                 if (previewOpened)
                     return;
@@ -1097,7 +1272,7 @@ namespace perlin::screen {
                 sf.id = 1;
                 sf.json = file::Read(previewForm);
             }
-            if (!ui::ParseForm(sf.id, sf.json, model)) {
+            if (!ddui && !ui::ParseForm(sf.id, sf.json, model)) {
                 Log("form", "cannot parse form {}", sf.id);
                 if (live)
                     live->SendFormResponse(sf.id, nullptr, false);
@@ -1114,17 +1289,19 @@ namespace perlin::screen {
                             ui::FormClick(model, id, ignored);
                 }
             Log("form", "opened form {} '{}'", sf.id, model.title);
-            DumpGenerated("last_form.json", sf.json);
-            if (const std::string name = FormDumpName(model.title); !name.empty())
-                DumpGenerated("forms/" + name + ".json", sf.json);
-            ui.Warm(host.serverPackDirectories());
-            ui.WaitReady(150);
-
+            if (!ddui) {
+                DumpGenerated("last_form.json", sf.json);
+                if (const std::string name = FormDumpName(model.title); !name.empty())
+                    DumpGenerated("forms/" + name + ".json", sf.json);
+                ui.Warm(host.serverPackDirectories());
+                ui.WaitReady(150);
+            }
             engineFailed = false;
-            engine = ui.Ready();
+            engine = !ddui && ui.Ready();
             host.screens.Open(*this);
             scroll = 0.0f;
             contentH = viewH = 0.0f;
+            dragSlider = -1;
             signature.clear();
             openedAt = now;
             leftDown = true;
@@ -1132,6 +1309,33 @@ namespace perlin::screen {
             CenterCursorForGui(host);
         }
 
+        if (live && ddui) {
+            json::Value root;
+            const uint64_t before = dduiRevision;
+            if (!live->ReadDduiScreen(*ddui, root, dduiRevision)) {
+                live->CloseDduiScreen(ddui->formId, "InvalidForm");
+                ddui.reset(); CloseOverlay(host, hud, *this); return;
+            }
+            if (before != dduiRevision) {
+                if (!ui::ParseDdui(*ddui, root, model)) return respondAndClose(nullptr);
+                if (dragSlider >= 0 && static_cast<size_t>(dragSlider) >= model.elements.size()) dragSlider = -1;
+                this->signature.clear();
+            }
+        }
+        std::vector<json::Value> prior;
+        if (ddui) for (const auto& e : model.elements) prior.push_back(ui::DduiControlValue(e));
+        const auto flush = [&] {
+            if (!live || !ddui) return;
+            for (size_t i = 0; i < model.elements.size() && i < prior.size(); ++i) {
+                const auto& e = model.elements[i];
+                if (e.disabled || !e.visible || e.wirePath.empty()) continue;
+                auto value = ui::DduiControlValue(e);
+                if (!value.IsNull() && value.Dump() != prior[i].Dump()) {
+                    if (!live->SendDduiUpdate(*ddui, e.wirePath, value)) dduiRevision = UINT64_MAX;
+                    prior[i] = std::move(value);
+                }
+            }
+        };
         bool cancel = false;
         for (const auto& t : host.inputManager.TakeTyped()) {
             if (IsEscape(t))
@@ -1140,10 +1344,11 @@ namespace perlin::screen {
                 ui::FormEdit(model, t);
         }
         scroll = std::max(0.0f, scroll - host.inputManager.Scroll() * 20.0f);
-        if (cancel)
+        if (cancel && model.showClose)
             return respondAndClose(nullptr);
+        flush();
 
-        if (!engine && ui.Building() && now - openedAt < std::chrono::seconds(3))
+        if (!ddui && !engine && ui.Building() && now - openedAt < std::chrono::seconds(3))
             return;
 
         const ui::GuiViewport gui = ui::OverlayViewport(hud, fbW, fbH);
@@ -1202,15 +1407,25 @@ namespace perlin::screen {
                 return respondAndClose(nullptr);
             if (ui::FormDismissDropdown(model, hover)) {
                 leftDown = down;
+                flush();
                 return;
             }
             std::string response;
+            if (live && ddui && hover.starts_with("a:")) {
+                const int index = std::atoi(hover.c_str() + 2);
+                if (index >= 0 && static_cast<size_t>(index) < model.elements.size()) {
+                    const auto& e = model.elements[index];
+                    if (e.kind == ui::FormElement::Kind::Button && !e.disabled && e.visible)
+                        live->SendDduiUpdate(*ddui, e.wirePath, json::Value(true));
+                }
+            }
             if (!hover.empty() && ui::FormClick(model, hover, response))
                 return respondAndClose(&response);
 
             if (!hover.empty() && !hover.starts_with("i:"))
                 model.focus = -1;
         }
+        flush();
         leftDown = down;
     }
 }

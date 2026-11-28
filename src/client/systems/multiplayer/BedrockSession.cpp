@@ -1396,6 +1396,9 @@ namespace perlin {
         {
             std::lock_guard<std::mutex> lk(serverUiMutex);
             pendingForms.clear();
+            pendingDdui.clear();
+            openDdui.clear();
+            dduiState.Clear();
         }
         formClosed = true;
     }

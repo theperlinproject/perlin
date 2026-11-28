@@ -18,11 +18,13 @@ namespace perlin::ui {
         bool hasNine = false;
         float nine[4] = {0, 0, 0, 0};
         int tiled = 0;
-        float tileScale = 1.0f;
+        float tileScale = 1.0f, tileScaleY = 1.0f;
+        bool separateTileScale = false;
         std::string clipDirection;
         float clipRatio = 1.0f;
         float r = 1, g = 1, b = 1, alpha = 1;
-        bool keepRatio = false;
+        bool keepRatio = false, cover = false, clipPixelPerfect = false;
+        float baseW = 0, baseH = 0;
         std::string id;
     };
 
@@ -59,7 +61,7 @@ namespace perlin::ui {
 
         static constexpr int kAutoZ = INT32_MIN;
         void BeginBox(float ax, float ay, float w, float h, int z, const std::string& cls,
-                      const std::string& id, bool clip, float scroll = 0.0f, const BoxSound& sound = {});
+                      const std::string& id, bool clip, float scroll = 0.0f, const BoxSound& sound = {}, bool inheritedClip = false);
         void EndBox();
         // A zero-size box at the origin whose subtree draws to the named UI layer ("debug"); close with EndBox.
         void BeginLayer(int z, const std::string& layer);

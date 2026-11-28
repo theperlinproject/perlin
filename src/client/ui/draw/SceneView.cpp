@@ -176,6 +176,13 @@ namespace perlin::ui::draw {
                 rootStyle = root;
                 Collect(-1, scene.nodes, 0, 0, list);
                 Paint(list);
+                // Paint order can precede a parent (negative z). Resolve ancestry
+                // only after all visible nodes have been painted.
+                for (size_t i = 0; i < hitParents.size(); ++i) {
+                    const int parent = hitParents[i];
+                    out.hits[i].parent = parent >= 0 && static_cast<size_t>(parent) < hitIndex.size()
+                        ? hitIndex[static_cast<size_t>(parent)] : -1;
+                }
                 out.starved = canvas.Starved();
             }
 
@@ -185,6 +192,8 @@ namespace perlin::ui::draw {
                 int parent = -1;
                 Style style;
                 float ax = 0, ay = 0, w = 0, h = 0;
+                bool hasInheritedClip = false;
+                std::array<float, 4> inheritedClip{};
             };
             struct Entry {
                 int idx;
@@ -210,7 +219,7 @@ namespace perlin::ui::draw {
 
             bool Hot(const SceneNode* n) const { return hover.contains(n); }
 
-            static bool CreatesContext(const Ctx& c) { return ZOf(*c.n) != INT_MIN || c.style.clip; }
+            static bool CreatesContext(const Ctx& c) { return ZOf(*c.n) != INT_MIN || (c.style.clip && !c.n->inheritedClip); }
 
             std::vector<SceneRun> NoRuns;
 
@@ -263,6 +272,21 @@ namespace perlin::ui::draw {
                     c.ax = ox + n.x;
                     c.ay = oy + n.y;
                     Measure(c);
+                    // Independent clipping and z-order for JSON UI clip containers.
+                    // Other scene contexts still use their scoped clips while painting.
+                    if (parent >= 0) {
+                        const Ctx& pc = arena[static_cast<size_t>(parent)];
+                        if (pc.hasInheritedClip) { c.hasInheritedClip = true; c.inheritedClip = pc.inheritedClip; }
+                        if (pc.n->inheritedClip && pc.style.clip) {
+                            const std::array<float, 4> box{pc.ax, pc.ay, pc.ax + pc.w, pc.ay + pc.h};
+                            if (c.hasInheritedClip) {
+                                c.inheritedClip[0] = std::max(c.inheritedClip[0], box[0]);
+                                c.inheritedClip[1] = std::max(c.inheritedClip[1], box[1]);
+                                c.inheritedClip[2] = std::min(c.inheritedClip[2], box[2]);
+                                c.inheritedClip[3] = std::min(c.inheritedClip[3], box[3]);
+                            } else { c.hasInheritedClip = true; c.inheritedClip = box; }
+                        }
+                    }
                     arena.push_back(c);
                     const int idx = static_cast<int>(arena.size()) - 1;
                     list.push_back({idx, ZOf(n)});
@@ -284,7 +308,8 @@ namespace perlin::ui::draw {
                 const Ctx& c = arena[static_cast<size_t>(idx)];
                 Hit h;
                 h.node = c.n;
-                h.parent = c.parent >= 0 ? hitIndex[static_cast<size_t>(c.parent)] : -1;
+                h.parent = -1;
+                hitParents.push_back(c.parent);
                 h.x0 = c.ax;
                 h.y0 = c.ay;
                 h.x1 = c.ax + c.w;
@@ -302,14 +327,37 @@ namespace perlin::ui::draw {
                 out.hits.push_back(h);
             }
 
-            std::vector<int> hitIndex;
+            std::vector<int> hitIndex, hitParents;
             int clipDepth = 0;
             float clipRect[4] = {0, 0, 0, 0};
             std::vector<std::array<float, 4>> clipStack;
 
+            void PushPaintClip(float x0, float y0, float x1, float y1) {
+                canvas.PushClip(x0, y0, x1, y1);
+                clipStack.push_back({clipDepth > 0 ? clipRect[0] : -1e9f, clipDepth > 0 ? clipRect[1] : -1e9f,
+                                     clipDepth > 0 ? clipRect[2] : 1e9f, clipDepth > 0 ? clipRect[3] : 1e9f});
+                clipRect[0] = std::max(clipStack.back()[0], x0);
+                clipRect[1] = std::max(clipStack.back()[1], y0);
+                clipRect[2] = std::min(clipStack.back()[2], x1);
+                clipRect[3] = std::min(clipStack.back()[3], y1);
+                ++clipDepth;
+            }
+            void PopPaintClip() {
+                --clipDepth;
+                const auto prev = clipStack.back();
+                std::copy(prev.begin(), prev.end(), clipRect);
+                clipStack.pop_back();
+                canvas.PopClip();
+            }
             void PaintEntry(int idx) {
                 Ctx& c = arena[static_cast<size_t>(idx)];
                 const SceneNode& n = *c.n;
+                const bool inherited = c.hasInheritedClip;
+                if (inherited) {
+                    const auto& r = c.inheritedClip;
+                    PushPaintClip(r[0], r[1], r[2], r[3]);
+                    if (canvas.ClipEmpty()) { PopPaintClip(); return; }
+                }
                 // "debug" applies to its node's subtree only (the F3 screen over the HUD and its paper doll).
                 const UiLayer layerBefore = canvas.Layer();
                 const bool scopedLayer = n.layer == "debug";
@@ -331,14 +379,7 @@ namespace perlin::ui::draw {
                     const float ax = c.ax, ay = c.ay, cw = c.w, ch = c.h;
                     bool visible = true;
                     if (clip) {
-                        canvas.PushClip(ax, ay, ax + cw, ay + ch);
-                        clipStack.push_back({clipDepth > 0 ? clipRect[0] : -1e9f, clipDepth > 0 ? clipRect[1] : -1e9f,
-                                             clipDepth > 0 ? clipRect[2] : 1e9f, clipDepth > 0 ? clipRect[3] : 1e9f});
-                        clipRect[0] = clipDepth > 0 ? std::max(clipRect[0], ax) : ax;
-                        clipRect[1] = clipDepth > 0 ? std::max(clipRect[1], ay) : ay;
-                        clipRect[2] = clipDepth > 0 ? std::min(clipRect[2], ax + cw) : ax + cw;
-                        clipRect[3] = clipDepth > 0 ? std::min(clipRect[3], ay + ch) : ay + ch;
-                        clipDepth++;
+                        PushPaintClip(ax, ay, ax + cw, ay + ch);
                         visible = !canvas.ClipEmpty();
                     }
                     if (visible) {
@@ -347,17 +388,13 @@ namespace perlin::ui::draw {
                         Paint(inner);
                     }
                     if (clip) {
-                        clipDepth--;
-                        const auto prev = clipStack.back();
-                        for (int i = 0; i < 4; i++)
-                            clipRect[i] = prev[static_cast<size_t>(i)];
-                        clipStack.pop_back();
-                        canvas.PopClip();
+                        PopPaintClip();
                     }
                 }
                 canvas.SetShift(previousShift);
                 if (scopedLayer)
                     canvas.SetLayer(layerBefore);
+                if (inherited) PopPaintClip();
             }
 
             void PaintBox(const Ctx& c) {
@@ -452,7 +489,13 @@ namespace perlin::ui::draw {
                     }
                 }
                 spec.tiled = n.tiled.empty() ? 0 : std::atoi(n.tiled.c_str());
-                spec.tileScale = n.tileScale.empty() ? 1.0f : std::strtof(n.tileScale.c_str(), nullptr);
+                if (const auto scales = Floats(n.tileScale); !scales.empty()) {
+                    spec.tileScale = scales[0];
+                    spec.tileScaleY = scales.size() > 1 ? scales[1] : scales[0];
+                }
+                if (const auto base = Floats(n.baseSize); base.size() == 2) {
+                    spec.baseW = base[0]; spec.baseH = base[1];
+                }
                 spec.clip = n.clipDirection;
                 if (!n.tint.empty()) {
                     const auto v = Floats(n.tint);
@@ -465,6 +508,7 @@ namespace perlin::ui::draw {
                 }
                 spec.alpha = n.alpha.empty() ? 1.0f : std::strtof(n.alpha.c_str(), nullptr);
                 spec.keep = !n.keep.empty() && std::atoi(n.keep.c_str()) != 0;
+                spec.cover = n.keep == "cover";
                 canvas.Image(spec);
             }
 

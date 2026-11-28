@@ -1,0 +1,29 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Perlin synthetic UI parity fixture",
+    "description": "Original synthetic test textures, not a vanilla screen replacement",
+    "uuid": "d28b5153-3c92-4a4d-9719-77d3ecda2100",
+    "version": [
+      1,
+      0,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      21,
+      0
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "03eab7a6-6681-4527-85c7-df8c67dbe07b",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,310 @@
+{
+  "method": "Exact ASCII NUL-terminated property strings and x64 RIP-relative LEA byte-pattern candidates; not a full disassembly or validated execution trace.",
+  "sha256": "9138ed5c5a213c3de891f56693542c6de1f5258b04fac4889ac37233785a700e",
+  "file_versions": [
+    {
+      "file_version": "1.26.65.1",
+      "product_version": "1.26.65.1",
+      "fixed_file_info_offset": "0x133d2558"
+    }
+  ],
+  "image_base": "0x140000000",
+  "properties": {
+    "clip_ratio": {
+      "strings": [],
+      "lea_candidates": []
+    },
+    "clip_direction": {
+      "strings": [
+        "0xf58b4ea"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c8936b",
+          "string_rva": "0xf58b4ea",
+          "runtime_function_start_rva": "0x1c88360"
+        }
+      ]
+    },
+    "clip_pixelperfect": {
+      "strings": [
+        "0xf541e16"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c89423",
+          "string_rva": "0xf541e16",
+          "runtime_function_start_rva": "0x1c88360"
+        }
+      ]
+    },
+    "nineslice_size": {
+      "strings": [
+        "0xf5bc94b"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0xed73e",
+          "string_rva": "0xf5bc94b",
+          "runtime_function_start_rva": "0xed150"
+        },
+        {
+          "instruction_rva": "0x1c890a1",
+          "string_rva": "0xf5bc94b",
+          "runtime_function_start_rva": "0x1c88360"
+        }
+      ]
+    },
+    "tiled": {
+      "strings": [],
+      "lea_candidates": []
+    },
+    "tiled_scale": {
+      "strings": [
+        "0xf5df781"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c8932a",
+          "string_rva": "0xf5df781",
+          "runtime_function_start_rva": "0x1c88360"
+        }
+      ]
+    },
+    "uv": {
+      "strings": [],
+      "lea_candidates": []
+    },
+    "uv_size": {
+      "strings": [
+        "0xf5bc623"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0xf87f5",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0xf8790"
+        },
+        {
+          "instruction_rva": "0xf8809",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0xf8790"
+        },
+        {
+          "instruction_rva": "0xfc72b",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0xfc2e0"
+        },
+        {
+          "instruction_rva": "0x3941ce",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0x393760"
+        },
+        {
+          "instruction_rva": "0x1c88ba1",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0x1c88360"
+        },
+        {
+          "instruction_rva": "0x58800bc",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0x5880020"
+        },
+        {
+          "instruction_rva": "0x5882ce8",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0x5882c60"
+        },
+        {
+          "instruction_rva": "0x5f2db37",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0x5f2b8a0"
+        },
+        {
+          "instruction_rva": "0x69f7d94",
+          "string_rva": "0xf5bc623",
+          "runtime_function_start_rva": "0x69f7820"
+        }
+      ]
+    },
+    "keep_ratio": {
+      "strings": [
+        "0xf57fb85"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c89514",
+          "string_rva": "0xf57fb85",
+          "runtime_function_start_rva": "0x1c88360"
+        }
+      ]
+    },
+    "fill": {
+      "strings": [
+        "0xef262d3",
+        "0xf5a2589",
+        "0xf5a25a5",
+        "0xf5a25b1",
+        "0xf5a25c2",
+        "0xf5a25d2",
+        "0xf5a25df",
+        "0xf84a764"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c8958e",
+          "string_rva": "0xf5a25df",
+          "runtime_function_start_rva": "0x1c88360"
+        },
+        {
+          "instruction_rva": "0x5187535",
+          "string_rva": "0xf5a25df",
+          "runtime_function_start_rva": "0x5187400"
+        },
+        {
+          "instruction_rva": "0xbe6a102",
+          "string_rva": "0xf5a25df",
+          "runtime_function_start_rva": "0xbe69700"
+        },
+        {
+          "instruction_rva": "0xbe6a7f0",
+          "string_rva": "0xf5a25df",
+          "runtime_function_start_rva": "0xbe69700"
+        },
+        {
+          "instruction_rva": "0xbe6adc9",
+          "string_rva": "0xf5a25df",
+          "runtime_function_start_rva": "0xbe69700"
+        },
+        {
+          "instruction_rva": "0xbe6b24a",
+          "string_rva": "0xf5a25df",
+          "runtime_function_start_rva": "0xbe69700"
+        },
+        {
+          "instruction_rva": "0xbe6b8ff",
+          "string_rva": "0xf5a25df",
+          "runtime_function_start_rva": "0xbe69700"
+        },
+        {
+          "instruction_rva": "0xbe6bfc0",
+          "string_rva": "0xf5a25df",
+          "runtime_function_start_rva": "0xbe69700"
+        }
+      ]
+    },
+    "base_size": {
+      "strings": [
+        "0xf5bc848"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0xedc39",
+          "string_rva": "0xf5bc848",
+          "runtime_function_start_rva": "0xed150"
+        },
+        {
+          "instruction_rva": "0x394208",
+          "string_rva": "0xf5bc848",
+          "runtime_function_start_rva": "0x393760"
+        }
+      ]
+    },
+    "bilinear": {
+      "strings": [
+        "0xf572675"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x114de03",
+          "string_rva": "0xf572675",
+          "runtime_function_start_rva": "0x1149100"
+        },
+        {
+          "instruction_rva": "0x1c897a6",
+          "string_rva": "0xf572675",
+          "runtime_function_start_rva": "0x1c88360"
+        }
+      ]
+    },
+    "grayscale": {
+      "strings": [
+        "0xf218f78"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x4ec139a",
+          "string_rva": "0xf218f78",
+          "runtime_function_start_rva": "0x4ec0af0"
+        },
+        {
+          "instruction_rva": "0x4ec13af",
+          "string_rva": "0xf218f78",
+          "runtime_function_start_rva": "0x4ec0af0"
+        }
+      ]
+    },
+    "clips_children": {
+      "strings": [
+        "0xf595c44"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c85028",
+          "string_rva": "0xf595c44",
+          "runtime_function_start_rva": "0x1c84d80"
+        }
+      ]
+    },
+    "allow_debug_missing_texture": {
+      "strings": [
+        "0xf5c783d"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c89897",
+          "string_rva": "0xf5c783d",
+          "runtime_function_start_rva": "0x1c88360"
+        }
+      ]
+    },
+    "layer": {
+      "strings": [
+        "0xf56631f",
+        "0xf56634f",
+        "0xf5663a2"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c84ed0",
+          "string_rva": "0xf5663a2",
+          "runtime_function_start_rva": "0x1c84d80"
+        }
+      ]
+    },
+    "font_scale_factor": {
+      "strings": [],
+      "lea_candidates": []
+    },
+    "text_alignment": {
+      "strings": [
+        "0xf5375be"
+      ],
+      "lea_candidates": [
+        {
+          "instruction_rva": "0x1c98f5f",
+          "string_rva": "0xf5375be",
+          "runtime_function_start_rva": "0x1c968a0"
+        }
+      ]
+    },
+    "#clip-ratio": {
+      "strings": [],
+      "lea_candidates": []
+    },
+    "#clip_ratio": {
+      "strings": [],
+      "lea_candidates": []
+    }
+  }
+}

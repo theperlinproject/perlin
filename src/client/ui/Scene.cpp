@@ -11,39 +11,20 @@
 
 namespace perlin::ui {
     SceneNode& SceneBuilder::Add(SceneNode node) {
-        node.x += shiftX;
-        node.y += shiftY;
         Current().push_back(std::move(node));
         return Current().back();
     }
 
     SceneNode& SceneBuilder::Begin(SceneNode node) {
-        if (Depth() >= kSceneMaxDepth) {
-            const float bx = node.x, by = node.y;
-            SceneNode& added = Add(std::move(node));
-            stack.push_back(stack.back());
-            flat.push_back(1);
-            shifts.emplace_back(bx, by);
-            shiftX += bx;
-            shiftY += by;
-            return added;
-        }
         SceneNode& added = Add(std::move(node));
         stack.push_back(&added.children);
-        flat.push_back(0);
         return added;
     }
 
     void SceneBuilder::End() {
         if (stack.size() <= 1)
             return;
-        if (flat.back()) {
-            shiftX -= shifts.back().first;
-            shiftY -= shifts.back().second;
-            shifts.pop_back();
-        }
         stack.pop_back();
-        flat.pop_back();
     }
 
     std::string SceneNumber(float v) {
@@ -150,7 +131,7 @@ namespace perlin::ui {
                     out += " key=" + n.key;
                 const std::pair<const char*, const std::string*> attributes[] = {
                     {"uv", &n.uv},         {"nine", &n.nine},   {"tiled", &n.tiled}, {"tilescale", &n.tileScale},
-                    {"clip", &n.clipDirection}, {"tint", &n.tint}, {"alpha", &n.alpha}, {"keep", &n.keep},
+                    {"clip", &n.clipDirection}, {"tint", &n.tint}, {"alpha", &n.alpha}, {"keep", &n.keep}, {"base_size", &n.baseSize},
                     {"glint", &n.glint},   {"snd", &n.snd},     {"vol", &n.vol},     {"pit", &n.pit},
                     {"decorator", &n.decorator}};
                 for (const auto& [name, value] : attributes)
